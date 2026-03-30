@@ -6,7 +6,7 @@ body {
   font-family: "Raleway";
 }
 
-section {
+.lean-section {
   padding: 0 20%;
 }
 /* Navbar Section */
@@ -122,3 +122,27 @@ section {
   color: white;
   font-weight: 600;
 }
+
+/* Secction Trusted by flex styling */
+.flexcontainer {
+  height: 50vh;
+  justify-content: center;
+  align-items: center;
+}
+.flexitems {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+/* Services paragraph */
+.service-head {
+  padding: 12% 5%;
+  text-align: center;
+}
+.service-para {
+  /* margin: 2% 5%; */
+  padding: 0% 15%;
+  text-align: center;
+}
+
