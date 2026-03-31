@@ -112,7 +112,7 @@ class ContactInfo extends HTMLElement {
                     &amp; Condition</label
                   >
                 </div>
-                <button class="btn w-100 custom-button">Request</button>
+                <button type="submit" class="btn w-100 custom-button">Request</button>
               </form>
             </div>
           </div>
