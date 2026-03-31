@@ -16,7 +16,7 @@ class Footer extends HTMLElement {
               <ul class="text-secondary text-left list-font ps-3">
                 <li>
                   Our Business Partner
-                  <a class="text-color">startupguid.com</a >
+                  <a href="http://startupguid.com" class="text-color" target="_blank">startupguid.com</a >
                 </li>
                 <li>
                   Read Our
