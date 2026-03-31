@@ -1,7 +1,7 @@
 class Services extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-      <section class="lean-section">
+      <section class="lean-section" id="services">
         <div class="container mb-5">
           <div class="row">
             <div class="col-lg-12 text-center">

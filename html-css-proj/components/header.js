@@ -1,7 +1,7 @@
 class Header extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-      <header class="title">
+      <header class="title" id="header">
         <div class="container-fluid mb-5">
           <div class="m-5 mt-0">
             <nav class="navbar navbar-expand-md navbar-light">
@@ -19,29 +19,26 @@ class Header extends HTMLElement {
               <div class="collapse navbar-collapse" id="navbarResponse">
                 <ul class="navbar-nav ms-auto">
                   <li class="nav-item">
-                    <a class="nav-link nav-text" href="#">Home</a>
+                    <a class="nav-link nav-text" href="#header">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link nav-text" href="#">Service</a>
+                    <a class="nav-link nav-text" href="#services">Service</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link nav-text" href="#">Pricing</a>
+                    <a class="nav-link nav-text" href="#pricing">Pricing</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link nav-text" href="#">Request</a>
+                    <a class="nav-link nav-text" href="#request">Request</a>
                   </li>
                   <li class="nav-item dropdown">
                     <a
-                      class="nav-link dropdown-toggle nav-text"
-                      href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
+                      class="nav-link nav-text"
+                      href="#about"
                       >About
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link nav-text" href="#">Contact</a>
+                    <a class="nav-link nav-text" href="#contact">Contact</a>
                   </li>
                   <li class="nav-item">
                     <a href="#" class="nav-item nav-link"

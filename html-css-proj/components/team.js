@@ -1,7 +1,7 @@
 class Team extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-      <section class="About-Team lean-section">
+      <section class="About-Team lean-section" id="about">
         <div class="container mb-5">
           <h2 class="text-center title-2">About The Team</h2>
           <div class="row">

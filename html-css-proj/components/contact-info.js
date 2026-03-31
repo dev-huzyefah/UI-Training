@@ -1,7 +1,7 @@
 class ContactInfo extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-      <section class="customer-info pt-5 mb-5 lean-section">
+      <section class="customer-info pt-5 mb-5 lean-section" id="contact">
         <div class="container mb-5">
           <div class="row">
             <div class="col-lg-12">
