@@ -123,6 +123,22 @@ body {
 .flexitems {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.flexitem {
+  flex: 1 1 auto;
+  min-width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flexitem img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Services paragraph */
@@ -176,7 +192,7 @@ body {
 }
 .pricing-card-body {
   padding: 2% 3%;
-  height: 320px;
+  /* height: 320px; */
 }
 
 .list-font {
@@ -260,15 +276,13 @@ body {
   max-width: 100%;
 }
 
-.check-list {
-  line-height: 1.5;
+/* .check-list {
 }
 
 .check-list li {
   position: relative;
   padding-left: 0.8em;
   margin-bottom: 0.75em;
-  font-size: 1.1em;
 }
 .check-list li::before {
   content: "\f00c";
@@ -277,9 +291,9 @@ body {
   color: #2d2d2d;
   position: absolute;
   left: 0;
-  top: 0.3em;
+  top: 0.4em;
   font-size: 0.5em;
-}
+} */
 
 /* Media queries to handle responsivesness */
 @media screen and (max-width: 1280px) {
@@ -360,9 +374,9 @@ body {
   .service-para {
     padding: 0 12%;
   }
-  .pricing-card-body {
+  /* .pricing-card-body {
     height: 220px;
-  }
+  } */
   .title-2 {
     font-size: 1.5rem;
   }
