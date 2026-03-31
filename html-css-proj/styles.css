@@ -10,13 +10,13 @@ body {
   padding: 0 20%;
 }
 /* Navbar Section */
-.nav-logo{
-    width: 80px; 
-    height: 80px;
-  }
+.nav-logo {
+  width: 80px;
+  height: 80px;
+}
 .nav-margin-cstm {
-    margin: 0 20px;
-    width: 100%;
+  margin: 0 20px;
+  width: 100%;
 }
 .navbar {
   width: 100% !important;
@@ -35,7 +35,7 @@ body {
   margin-right: auto;
   flex-shrink: 0;
 }
-.nav-text{
+.nav-text {
   color: white !important;
   font-weight: 600;
 }
@@ -45,17 +45,13 @@ body {
   background-image: url("assets/header-background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  /* background-color: red; */
+  /* background-color: blue; */
 }
 .Title-container {
   padding: 0% 5%;
-
 }
-/* .title-padding{
 
-} */
-
-.title-heading{
+.title-heading {
   text-align: left;
 }
 
@@ -68,40 +64,34 @@ body {
   border-radius: 100%;
   height: 1.5em;
 }
-.small-icons2{
-    margin-right: 5px;
-    color: #00bfd9;
-    background-color: white;
-    border-radius: 100%;
-    height: 1.2em;
-    
+.small-icons2 {
+  margin-right: 5px;
+  color: #00bfd9;
+  background-color: white;
+  border-radius: 100%;
+  height: 1.2em;
 }
-.h1-custom{
-    font-family: "Raleway", sans-serif;
-    font-size: 4rem;
-    text-align: left;
-    color: #00bfd9;
-}
-
-.h3-custom{
-    font-size: 1.5rem;
-    color: #3f3f3f;
-    font-weight: 600;
-}
-/* p {
+.h1-custom {
+  font-family: "Raleway", sans-serif;
+  font-size: 4rem;
   text-align: left;
-  line-height: 2rem;
-  color: #3f3f3f;
-} */
+  color: #00bfd9;
+}
 
-.custom-para{
+.h3-custom {
+  font-size: 1.5rem;
+  color: #3f3f3f;
+  font-weight: 600;
+}
+
+.custom-para {
   text-align: left;
   line-height: 1.5rem;
   color: #3f3f3f;
   font-size: 1.2rem;
   padding: 0 0;
 }
-.custom-p{
+.custom-p {
   font-size: 1.2rem;
   padding: 0 10% 0 0%;
 }
@@ -134,33 +124,30 @@ body {
   justify-content: space-between;
 }
 
-
 /* Services paragraph */
 .service-head {
   padding: 12% 5%;
   text-align: center;
 }
 .service-para {
-  /* margin: 2% 5%; */
   padding: 0% 15%;
   text-align: center;
 }
 
-
 /* Design Section Styling*/
-.text-block-padding{
-    padding-block-start: 4em; 
+.text-block-padding {
+  padding-block-start: 4em;
 }
-.margin-bottom-custm{
-    margin-bottom: 20px !important;
+.margin-bottom-custm {
+  margin-bottom: 20px !important;
 }
-.text-block-padding2{
-    padding-block-start: 2em;
+.text-block-padding2 {
+  padding-block-start: 2em;
 }
-.design-p{
-    margin-top: 0%;
-    padding-left: 5px !important;
-    padding-right: 0px !important;
+.design-p {
+  margin-top: 0%;
+  padding-left: 5px !important;
+  padding-right: 0px !important;
 }
 
 /* Card Setting */
@@ -174,7 +161,6 @@ body {
 .card-text {
   text-align: center;
   padding: 5% 3%;
-  /* line-height: ; */
   margin-bottom: 15%;
 }
 .card {
@@ -185,7 +171,6 @@ body {
 }
 .card-body {
   padding: 2% 3%;
-  /* height: 280px; */
 }
 .pricing-card-body {
   padding: 2% 3%;
@@ -203,35 +188,32 @@ body {
 
 .svg-container {
   padding: 0 12%;
-  /* width: 100%; */
   border-radius: 50px;
 }
-.video-img{
-  /* padding: 1% 0%; */
+.video-img {
   border-radius: 1%;
   border: transparent;
   width: 60%;
 }
 
-.video-para{
+.video-para {
   padding: 0% 30%;
 }
 .starter-button {
-    width: 8em;
-    top: unset;
-    font-weight: 600;
+  width: 8em;
+  top: unset;
+  font-weight: 600;
 }
 .card {
-margin-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 .btn-set {
-margin: auto;
-transform: translateY(-24px);
+  margin: auto;
+  transform: translateY(-24px);
 }
 
 /* Testimonials Sections */
 .Testimonials-setting {
-  /* background-size: cover; */
   position: relative;
   text-align: center;
   z-index: 1;
@@ -275,19 +257,18 @@ transform: translateY(-24px);
   border-radius: 50%;
   height: 2em;
 }
-.text-color{
-    color: #00bfd9;
-    text-decoration: underline;
+.text-color {
+  color: #00bfd9;
+  text-decoration: underline;
 }
 .card-title {
   font-weight: 400;
 }
 
 /* Customer Contact Information */
-.customer-info{
+.customer-info {
   background-image: url("assets/contact-background.png");
   max-width: 100%;
-
 }
 
 .check-list {
@@ -311,108 +292,93 @@ transform: translateY(-24px);
   font-size: 0.5em;
 }
 
-
-
 /* Media queries to handle responsivesness */
 @media screen and (max-width: 1280px) {
-    .lst-img {
-      display: none !important;
-    }
+  .lst-img {
+    display: none !important;
   }
+}
 
 @media screen and (max-width: 1080px) {
-h1 {
+  h1 {
     font-size: 2rem;
-    /* text-align: center; */
-}
-p {
+  }
+  p {
     line-height: normal;
     font-size: smaller;
-    /* text-align: center; */
-}
-
+  }
 }
 
 @media screen and (max-width: 990px) {
-    h1 {
-      font-size: 2rem;
-      text-align: center;
-    }
-    p {
-      line-height: normal;
-      font-size: smaller;
-      text-align: center;
-    }
-    .margin-bottom-custm{
-      margin-bottom: 50px !important;
-    }
-    .h1-custom{
-      font-size: 2.5rem;
-    }
-    .nav-text{
-      color:  #00bfd9 !important;
-      font-weight: 600;
-    }
-    .lean-section {
-      padding: 0 0;
-    }
+  h1 {
+    font-size: 2rem;
+    text-align: center;
   }
-
+  p {
+    line-height: normal;
+    font-size: smaller;
+    text-align: center;
+  }
+  .margin-bottom-custm {
+    margin-bottom: 50px !important;
+  }
+  .h1-custom {
+    font-size: 2.5rem;
+  }
+  .nav-text {
+    color: #00bfd9 !important;
+    font-weight: 600;
+  }
+  .lean-section {
+    padding: 0 0;
+  }
+}
 
 @media screen and (max-width: 770px) {
   .flexitems {
     justify-content: center;
   }
-  /* .hide-flexitem{
-        display: none; */
-  /* } */
   .head-btn-div {
     text-align: center;
-    /* align-items: center; */
   }
-  .btn-1{
+  .btn-1 {
     margin: 20px 2px;
     width: 8em;
     font-size: 16px;
     text-align: center;
   }
-  .btn-2{
+  .btn-2 {
     width: 6em;
   }
-  .h1-custom{
+  .h1-custom {
     font-size: 1.5rem;
   }
-  .title-padding{
+  .title-padding {
     padding: 0 0.75rem;
   }
-  .custom-p{
+  .custom-p {
     font-size: 1rem;
   }
-  .custom-para{
+  .custom-para {
     font-size: 0.875rem;
   }
-  .title-heading{
+  .title-heading {
     text-align: center;
   }
-  .list-font{
+  .list-font {
     font-size: 0.75rem;
   }
-  .service-para{
+  .service-para {
     padding: 0 12%;
   }
-  .pricing-card-body{
+  .pricing-card-body {
     height: 220px;
   }
-  .title-2{
+  .title-2 {
     font-size: 1.5rem;
   }
-  .nav-text{
-    color:  #00bfd9 !important;
+  .nav-text {
+    color: #00bfd9 !important;
     font-weight: 600;
   }
 }
-
-
-
-
-
