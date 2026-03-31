@@ -16,11 +16,11 @@ class Footer extends HTMLElement {
               <ul class="text-secondary text-left list-font ps-3">
                 <li>
                   Our Business Partner
-                  <span class="text-color">startupguid.com</span>
+                  <a class="text-color">startupguid.com</a >
                 </li>
                 <li>
                   Read Our
-                  <span class="text-color">Terms &amp; Conditions</span>
+                  <a class="text-color">Terms &amp; Conditions</a >
                 </li>
               </ul>
             </div>
@@ -110,7 +110,7 @@ class Footer extends HTMLElement {
           </div>
           <hr />
           <p class="text-center">
-            Copyright © 2020 <u>Inovatik</u>-All right reserved
+            Copyright © 2026 <u>Huzyefah</u>-All right reserved
           </p>
         </div>
       </footer>

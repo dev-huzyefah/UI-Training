@@ -176,9 +176,6 @@ body {
   padding: 2% 3%;
   height: 320px;
 }
-.btn-trnsfm {
-  transform: translateY(-39px);
-}
 
 .list-font {
   font-size: 1rem;
@@ -186,13 +183,7 @@ body {
 
 /* Video Section */
 
-.svg-container {
-  padding: 0 12%;
-  border-radius: 50px;
-}
 .video-img {
-  border-radius: 1%;
-  border: transparent;
   width: 60%;
 }
 

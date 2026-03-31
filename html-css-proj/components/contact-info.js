@@ -1,7 +1,7 @@
 class ContactInfo extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `
-      <section class="customer-info contact-bg pt-5 mb-5 lean-section">
+      <section class="customer-info pt-5 mb-5 lean-section">
         <div class="container mb-5">
           <div class="row">
             <div class="col-lg-12">
@@ -109,7 +109,7 @@ class ContactInfo extends HTMLElement {
                     class="form-check-label list-font text-secondary"
                     for="exampleCheck1"
                     >I agree with Evolo's stated Privacy Policy and Terms
-                    &amp;Condition</label
+                    &amp; Condition</label
                   >
                 </div>
                 <button class="btn w-100 custom-button">Request</button>

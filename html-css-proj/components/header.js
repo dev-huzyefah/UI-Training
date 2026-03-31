@@ -4,7 +4,7 @@ class Header extends HTMLElement {
       <header class="title">
         <div class="container-fluid mb-5">
           <div class="m-5 mt-0">
-            <nav class="navbar navbar-expand-md navbar-light Fixed">
+            <nav class="navbar navbar-expand-md navbar-light">
               <a class="navbar-brand" href="#">
                 <img src="assets/logo.svg" alt="logo-img" class="nav-logo" />
               </a>
