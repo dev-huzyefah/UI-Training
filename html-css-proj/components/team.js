@@ -6,7 +6,7 @@ class Team extends HTMLElement {
           <h2 class="text-center title-2">About The Team</h2>
           <div class="row">
             <p class="text-secondary text-center abt-para">
-              Meat our team of specialized marketers and business developers which
+              Meet our team of specialized marketers and business developers which
               will help you research new products and launch them in new emerging
               markets
             </p>

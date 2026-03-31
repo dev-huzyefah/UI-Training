@@ -76,10 +76,9 @@ class ContactInfo extends HTMLElement {
               <form>
                 <div class="col-lg-12 form-group pt-2">
                   <input
-                    type=""
+                    type="text"
                     class="form-control"
                     id="msg-name"
-                    aria-describedby=""
                     placeholder="Name"
                   />
                 </div>
@@ -104,10 +103,10 @@ class ContactInfo extends HTMLElement {
                 </div>
 
                 <div class="col-lg-12 mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="" />
+                  <input type="checkbox" class="form-check-input" id="privacyCheck" />
                   <label
                     class="form-check-label list-font text-secondary"
-                    for="exampleCheck1"
+                    for="privacyCheck"
                     >I agree with Evolo's stated Privacy Policy and Terms
                     &amp; Condition</label
                   >

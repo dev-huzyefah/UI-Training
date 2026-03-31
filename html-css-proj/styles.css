@@ -48,7 +48,6 @@ body {
   background-image: url("assets/header-background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  /* background-color: blue; */
 }
 .Title-container {
   padding: 0% 5%;
@@ -106,7 +105,6 @@ body {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  /* margin: 4px 2px; */
   cursor: pointer;
   border-radius: 32px;
 }
@@ -168,6 +166,7 @@ body {
 }
 .card {
   margin: auto;
+  margin-bottom: 0 !important;
 }
 .card-img-top {
   width: 100%;
@@ -185,7 +184,6 @@ body {
 }
 
 /* Video Section */
-
 .video-img {
   width: 60%;
 }
@@ -197,9 +195,6 @@ body {
   width: 8em;
   top: unset;
   font-weight: 600;
-}
-.card {
-  margin-bottom: 0 !important;
 }
 .btn-set {
   margin: auto;
@@ -266,7 +261,7 @@ body {
 }
 
 .check-list {
-  line-height: 80%;
+  line-height: 1.5;
 }
 
 .check-list li {

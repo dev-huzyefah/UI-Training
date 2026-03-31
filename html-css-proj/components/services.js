@@ -5,7 +5,7 @@ class Services extends HTMLElement {
         <div class="container mb-5">
           <div class="row">
             <div class="col-lg-12 text-center">
-              <h2 class="title-2">Bussiness Growth Services</h2>
+              <h2 class="title-2">Business Growth Services</h2>
               <p class="service-para text-secondary custom-p">
                 We serve small and medium sized companies in all tech related
                 industries with high quality growth services which are presented
@@ -42,7 +42,7 @@ class Services extends HTMLElement {
                   />
                 </div>
                 <div class="card-body text-center">
-                  <h5 class="card-title"><b>Oppotunity Scan</b></h5>
+                  <h5 class="card-title"><b>Opportunity Scan</b></h5>
                   <p class="card-text text-secondary">
                     Once the market analysis process is completed our staff will
                     search for opportunities that are in reach

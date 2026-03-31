@@ -105,7 +105,7 @@ class Header extends HTMLElement {
               </div>
             </div>
             <div class="col-lg-6 text-center">
-              <img src="./assets/header-teamwork.svg" width="80%" />
+              <img src="./assets/header-teamwork.svg" width="80%" alt="Team working together" />
             </div>
           </div>
         </div>

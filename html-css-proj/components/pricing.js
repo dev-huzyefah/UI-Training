@@ -21,7 +21,7 @@ class Pricing extends HTMLElement {
                     <div class="text-center mx-auto">
                       <h4 class="pt-3"><b>STARTER</b></h4>
                       <p class="text-secondary list-font">
-                        Just to see what can be achived
+                        Just to see what can be achieved
                       </p>
                       <hr />
                     </div>

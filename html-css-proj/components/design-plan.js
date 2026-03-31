@@ -5,7 +5,7 @@ class DesignPlan extends HTMLElement {
         <div class="container mb-5">
           <div class="row">
             <div class="col-lg-5 col-md-12">
-              <h2 class="title-2">Design And Plan Your Businnes Growth Setup</h2>
+          <h2 class="title-2">Design And Plan Your Business Growth Setup</h2>
               <p class="text-secondary custom-p">
                 Use our staff and our expertise to design and plan your business
                 growth strategy. Evolo team is eager to advise you on the best

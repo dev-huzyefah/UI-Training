@@ -40,11 +40,10 @@ class RequestMeetingForm extends HTMLElement {
               <form>
                 <div class="col-lg-12 form-group pt-2">
                   <input
-                    type=""
+                    type="text"
                     class="form-control"
                     id="fullname"
-                    aria-describedby=""
-                    placeholder="Full"
+                    placeholder="Full Name"
                   />
                 </div>
                 <div class="col-lg-12 mb-3 pt-2">
@@ -58,13 +57,13 @@ class RequestMeetingForm extends HTMLElement {
                 </div>
                 <div class="col-lg-12 mb-3 pt-2">
                   <input
-                    type=""
+                    type="tel"
                     class="form-control"
                     id="phone"
                     placeholder="Phone"
                   />
                 </div>
-                <div class="col-lg-12 form-group col-lg-12 pt-2">
+                <div class="col-lg-12 form-group pt-2">
                   <select id="inputoptions" class="form-control">
                     <option selected="">I'm interested.</option>
                     <option>...</option>
