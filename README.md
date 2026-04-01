@@ -14,7 +14,7 @@ html-css-proj/
 
 ## Preview
 
-![Website Screenshot](html-css-proj/assets/website-screenshot.png)
+![Website Screenshot](html-css-proj/assets/full-screen-capture.png)
 
 ## Getting Started
 
