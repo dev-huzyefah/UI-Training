@@ -1,0 +1,387 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: "Raleway", sans-serif;
+}
+
+.lean-section {
+  padding: 0 20%;
+}
+/* Navbar Section */
+.nav-logo {
+  width: 80px;
+  height: 80px;
+}
+.nav-margin-cstm {
+  margin: 0 20px;
+  width: 100%;
+}
+.navbar {
+  width: 100% !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar-nav {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: 0 !important;
+}
+.navbar-brand {
+  margin-right: auto;
+  flex-shrink: 0;
+}
+.nav-text {
+  color: white !important;
+  font-weight: 600;
+}
+
+/* Title Section */
+.title {
+  background-image: url("assets/header-background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.Title-container {
+  padding: 0% 5%;
+}
+
+.title-heading {
+  text-align: left;
+}
+
+.title-2 {
+  font-weight: 800;
+}
+.small-icons {
+  color: #00bfd9;
+  background-color: white;
+  border-radius: 100%;
+  height: 1.5em;
+}
+.small-icons2 {
+  margin-right: 5px;
+  color: #00bfd9;
+  background-color: white;
+  border-radius: 100%;
+  height: 1.2em;
+}
+.h1-custom {
+  font-family: "Raleway", sans-serif;
+  font-size: 4rem;
+  text-align: left;
+  color: #00bfd9;
+}
+
+.h3-custom {
+  font-size: 1.5rem;
+  color: #3f3f3f;
+  font-weight: 600;
+}
+
+.custom-para {
+  text-align: left;
+  line-height: 1.5rem;
+  color: #3f3f3f;
+  font-size: 1.2rem;
+  padding: 0 0;
+}
+.custom-p {
+  font-size: 1.2rem;
+  padding: 0 10% 0 0%;
+}
+
+/* Button styling */
+.rounded-pill {
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 32px;
+}
+.custom-button {
+  background-color: #00bfd9;
+  color: white;
+  font-weight: 600;
+}
+
+/* Secction Trusted by flex styling */
+.flexcontainer {
+  height: 50vh;
+  justify-content: center;
+  align-items: center;
+}
+.flexitems {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.flexitem {
+  flex: 1 1 auto;
+  min-width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flexitem img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Services paragraph */
+.service-head {
+  padding: 12% 5%;
+  text-align: center;
+}
+.service-para {
+  padding: 0% 15%;
+  text-align: center;
+}
+
+/* Design Section Styling*/
+.text-block-padding {
+  padding-block-start: 4em;
+}
+.margin-bottom-custm {
+  margin-bottom: 20px !important;
+}
+.text-block-padding2 {
+  padding-block-start: 2em;
+}
+.design-p {
+  margin-top: 0%;
+  padding-left: 5px !important;
+  padding-right: 0px !important;
+}
+
+/* Card Setting */
+.card-setting {
+  width: 30%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5%;
+}
+.card-text {
+  text-align: center;
+  padding: 5% 3%;
+  margin-bottom: 15%;
+}
+.card {
+  margin: auto;
+  margin-bottom: 0 !important;
+}
+.card-img-top {
+  width: 100%;
+}
+.card-body {
+  padding: 2% 3%;
+}
+.pricing-card-body {
+  padding: 2% 3%;
+  /* height: 320px; */
+}
+
+.list-font {
+  font-size: 1rem;
+}
+
+/* Video Section */
+.video-img {
+  width: 60%;
+}
+
+.video-para {
+  padding: 0% 30%;
+}
+.starter-button {
+  width: 8em;
+  top: unset;
+  font-weight: 600;
+}
+.btn-set {
+  margin: auto;
+  transform: translateY(-24px);
+}
+
+/* Testimonials Sections */
+.Testimonials-setting {
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.Testimonials-setting::before {
+  content: "";
+  background: url("assets/testimonials-background.png") no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+.testmonial-img {
+  width: 25%;
+  border-radius: 100%;
+}
+.carousel-item {
+  padding: 7% 15%;
+  height: 20%;
+}
+.carousel-control-next,
+.carousel-control-prev {
+  filter: invert(100%);
+}
+
+/* Section About Team */
+.abt-para {
+  padding: 1% 22%;
+}
+.team-img {
+  width: 50%;
+  border-radius: 100%;
+}
+
+.icons {
+  color: #00bfd9;
+  border-radius: 50%;
+  height: 2em;
+}
+.text-color {
+  color: #00bfd9;
+  text-decoration: underline;
+}
+.card-title {
+  font-weight: 400;
+}
+
+/* Customer Contact Information */
+.customer-info {
+  background-image: url("assets/contact-background.png");
+  max-width: 100%;
+}
+
+/* .check-list {
+}
+
+.check-list li {
+  position: relative;
+  padding-left: 0.8em;
+  margin-bottom: 0.75em;
+}
+.check-list li::before {
+  content: "\f00c";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: #2d2d2d;
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  font-size: 0.5em;
+} */
+
+/* Media queries to handle responsivesness */
+@media screen and (max-width: 1280px) {
+  .lst-img {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  h1 {
+    font-size: 2rem;
+  }
+  p {
+    line-height: normal;
+    font-size: smaller;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  p {
+    line-height: normal;
+    font-size: smaller;
+    text-align: center;
+  }
+  .margin-bottom-custm {
+    margin-bottom: 50px !important;
+  }
+  .h1-custom {
+    font-size: 2.5rem;
+  }
+  .nav-text {
+    color: #00bfd9 !important;
+    font-weight: 600;
+  }
+  .lean-section {
+    padding: 0 0;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .flexitems {
+    justify-content: center;
+  }
+  .head-btn-div {
+    text-align: center;
+  }
+  .btn-1 {
+    margin: 20px 2px;
+    width: 8em;
+    font-size: 16px;
+    text-align: center;
+  }
+  .btn-2 {
+    width: 6em;
+  }
+  .h1-custom {
+    font-size: 1.5rem;
+  }
+  .title-padding {
+    padding: 0 0.75rem;
+  }
+  .custom-p {
+    font-size: 1rem;
+  }
+  .custom-para {
+    font-size: 0.875rem;
+  }
+  .title-heading {
+    text-align: center;
+  }
+  .list-font {
+    font-size: 0.75rem;
+  }
+  .service-para {
+    padding: 0 12%;
+  }
+  /* .pricing-card-body {
+    height: 220px;
+  } */
+  .title-2 {
+    font-size: 1.5rem;
+  }
+  .nav-text {
+    color: #00bfd9 !important;
+    font-weight: 600;
+  }
+}
