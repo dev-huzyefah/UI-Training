@@ -51,6 +51,31 @@
       "createdAt": "2026-04-13T15:10:46.919Z"
     }
   ],
-  "recentlyPlayed": [],
+  "recentlyPlayed": [
+    {
+      "id": "mbLWou0FMIw",
+      "userId": "Y77VIC_PCmY",
+      "songId": "s2",
+      "playedAt": "2026-04-13T15:18:58.116Z"
+    },
+    {
+      "id": "VwnCiUZXOlY",
+      "userId": "Y77VIC_PCmY",
+      "songId": "s1",
+      "playedAt": "2026-04-13T15:19:30.714Z"
+    },
+    {
+      "id": "dCjgSJ-gxjc",
+      "userId": "Y77VIC_PCmY",
+      "songId": "s10",
+      "playedAt": "2026-04-13T15:19:34.288Z"
+    },
+    {
+      "id": "Y4tC41JJpDo",
+      "userId": "Y77VIC_PCmY",
+      "songId": "s2",
+      "playedAt": "2026-04-13T15:19:48.441Z"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }
