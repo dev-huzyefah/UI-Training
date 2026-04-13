@@ -1,0 +1,56 @@
+{
+  "users": [
+    {
+      "id": "user-demo",
+      "email": "demo@example.com",
+      "password": "password123",
+      "displayName": "Demo User",
+      "avatarUrl": "https://i.pravatar.cc/150?img=1"
+    },
+    {
+      "id": "user-test",
+      "email": "test@example.com",
+      "password": "test123",
+      "displayName": "Test User",
+      "avatarUrl": "https://i.pravatar.cc/150?img=2"
+    },
+    {
+      "id": "Y77VIC_PCmY",
+      "email": "huzyefah.saqib@devsinc.com",
+      "password": "123456",
+      "displayName": "Huzyefah",
+      "avatarUrl": "https://i.pravatar.cc/150?img=3"
+    }
+  ],
+  "playlists": [
+    {
+      "id": "jkbqZZIZm20",
+      "userId": "Y77VIC_PCmY",
+      "name": "New",
+      "description": "",
+      "coverUrl": "https://picsum.photos/seed/1776092936836/300/300",
+      "songIds": [],
+      "createdAt": "2026-04-13T15:08:56.836Z"
+    },
+    {
+      "id": "bWmKTyI-c8U",
+      "userId": "Y77VIC_PCmY",
+      "name": "gg",
+      "description": "",
+      "coverUrl": "https://picsum.photos/seed/1776092957653/300/300",
+      "songIds": [],
+      "createdAt": "2026-04-13T15:09:17.653Z"
+    },
+    {
+      "id": "XbFaPg-4TdI",
+      "userId": "Y77VIC_PCmY",
+      "name": "mm",
+      "description": "",
+      "coverUrl": "https://picsum.photos/seed/1776093046919/300/300",
+      "songIds": [],
+      "createdAt": "2026-04-13T15:10:46.919Z"
+    }
+  ],
+  "recentlyPlayed": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
