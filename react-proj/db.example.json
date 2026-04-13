@@ -1,0 +1,6 @@
+{
+  "users": [],
+  "playlists": [],
+  "recentlyPlayed": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
