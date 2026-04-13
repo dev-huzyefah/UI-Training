@@ -51,7 +51,7 @@ export const userAPI = {
       email,
       password,
       displayName,
-      avatarUrl: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`
+      avatarUrl: `https://picsum.photos/id/${Math.floor(Math.random() * 70)}/200/200`
     };
 
     const response = await fetch(`${API_URL}/users`, {
