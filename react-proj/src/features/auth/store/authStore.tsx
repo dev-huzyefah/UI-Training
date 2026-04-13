@@ -1,0 +1,87 @@
+import { createContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import type { AuthUser, AuthCredentials, SignupData } from '../types/authTypes';
+import * as authAPI from '../services/authAPI';
+
+export interface AuthStore {
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+  login: (creds: AuthCredentials) => Promise<void>;
+  signup: (data: SignupData) => Promise<void>;
+  logout: () => void;
+  clearError: () => void;
+}
+
+export const AuthContext = createContext<AuthStore | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const session = authAPI.getSession();
+    setUser(session);
+    setIsLoading(false);
+  }, []);
+
+  const login = useCallback(async (creds: AuthCredentials) => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      const result = await authAPI.login(creds);
+      if (result.success && result.user) {
+        setUser(result.user);
+      } else {
+        setError(result.error ?? 'Login failed');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const signup = useCallback(async (data: SignupData) => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      const result = await authAPI.signup(data);
+      if (result.success && result.user) {
+        setUser(result.user);
+      } else {
+        setError(result.error ?? 'Signup failed');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Signup failed');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const logout = useCallback(() => {
+    authAPI.clearSession();
+    setUser(null);
+    setError(null);
+  }, []);
+
+  const clearError = useCallback(() => setError(null), []);
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        error,
+        login,
+        signup,
+        logout,
+        clearError,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
