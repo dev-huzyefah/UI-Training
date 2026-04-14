@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import './Auth.css';
@@ -13,7 +13,7 @@ export function SignupForm() {
     return <Navigate to="/" replace />;
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     clearError();
     void signup({ displayName, email, password });
