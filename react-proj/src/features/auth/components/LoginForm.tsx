@@ -29,7 +29,7 @@ export function LoginForm() {
         </div>
 
         <h1 className="auth-card__title">Welcome back</h1>
-        <p className="auth-card__subtitle">Sign in to continue listening</p>
+        <p className="auth-card__subtitle">Sign in</p>
 
         <form className="auth-form" onSubmit={handleSubmit} id="login-form">
           {error && <div className="auth-form__error">{error}</div>}
