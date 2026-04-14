@@ -33,29 +33,6 @@
   transform: scale(1.04);
 }
 
-.playlist-card__play-overlay {
-  position: absolute;
-  bottom: var(--space-2);
-  right: var(--space-2);
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-full);
-  background: var(--color-accent);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: all var(--transition-base);
-  box-shadow: var(--shadow-md);
-}
-
-.playlist-card:hover .playlist-card__play-overlay {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .playlist-card__name {
   font-size: var(--text-base);
   font-weight: 600;

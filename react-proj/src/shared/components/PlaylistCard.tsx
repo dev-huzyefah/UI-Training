@@ -24,9 +24,6 @@ export function PlaylistCard({ playlist, onClick }: PlaylistCardProps) {
           alt={playlist.name}
           loading="lazy"
         />
-        <div className="playlist-card__play-overlay">
-          <PiPlayFill size={20} />
-        </div>
       </div>
       <span className="playlist-card__name">{playlist.name}</span>
       <span className="playlist-card__description">{playlist.description}</span>
