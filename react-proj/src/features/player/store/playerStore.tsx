@@ -1,7 +1,7 @@
 import { createContext, useState, useRef, useCallback, useEffect, type ReactNode } from 'react';
 import type { Song } from '@/shared/types/types';
-import { recentlyPlayedAPI } from '@/shared/services/api';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 
 export interface PlayerStore {
   currentSong: Song | null;
@@ -36,6 +36,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  
+  const [_, setRecentIds] = useLocalStorage<string[]>(auth.user?.id ? `recently_played_${auth.user.id}` : '', []);
 
   // Initialize audio element
   useEffect(() => {
@@ -99,21 +101,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
     // Save to recently played in localStorage (user-specific)
     if (auth.user?.id) {
-      try {
-        const key = `recently_played_${auth.user.id}`;
-        const recent = JSON.parse(localStorage.getItem(key) ?? '[]') as string[];
-        const updated = [song.id, ...recent.filter((id: string) => id !== song.id)].slice(0, 20);
-        localStorage.setItem(key, JSON.stringify(updated));
-        
-        // Emit custom event to notify HomePage of the update
-        window.dispatchEvent(new CustomEvent('recentlyPlayedUpdated', {
-          detail: { userId: auth.user.id, songId: song.id }
-        }));
-      } catch (error) {
-        console.error('Failed to save recently played to localStorage:', error);
-      }
+      setRecentIds(recent => [song.id, ...recent.filter(id => id !== song.id)].slice(0, 20));
+      
+      // Still emit the specific event for compatibility if any other component expects it
+      window.dispatchEvent(new CustomEvent('recentlyPlayedUpdated', {
+        detail: { userId: auth.user.id, songId: song.id }
+      }));
     }
-  }, [auth.user?.id]);
+  }, [auth.user?.id, setRecentIds]);
 
   const togglePlay = useCallback(() => {
     if (!audioRef.current || !currentSong) return;

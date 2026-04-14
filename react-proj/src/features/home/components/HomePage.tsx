@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PiMusicNotesBold } from 'react-icons/pi';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { usePlaylist } from '@/features/playlists/hooks/usePlaylist';
+import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 import { SongRow } from '@/shared/components/SongRow';
 import { PlaylistCard } from '@/shared/components/PlaylistCard';
 import { EmptyState } from '@/shared/components/EmptyState';
@@ -22,10 +23,20 @@ export function HomePage() {
   const { playlists, addSongToPlaylist } = usePlaylist();
   const navigate = useNavigate();
   const [addingPlaylistFor, setAddingPlaylistFor] = useState<string | null>(null);
-  const [recentSongs, setRecentSongs] = useState<Song[]>([]);
   const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [featured, setFeatured] = useState<Playlist[]>([]);
   const [_, setLoading] = useState(true);
+
+  const [recentIds] = useLocalStorage<string[]>(user?.id ? `recently_played_${user.id}` : '', []);
+
+  const recentSongs = useMemo(() => {
+    if (!user?.id || allSongs.length === 0) return [];
+    
+    return recentIds
+      .map(id => allSongs.find(s => s.id === id))
+      .filter((s): s is Song => !!s)
+      .slice(0, 6);
+  }, [recentIds, allSongs, user?.id]);
 
   // Fetch songs and featured playlists on mount
   useEffect(() => {
@@ -46,46 +57,6 @@ export function HomePage() {
 
     fetchData();
   }, []);
-
-  // Helper function to fetch recently played songs from localStorage
-  const fetchRecentSongsFromLocalStorage = () => {
-    if (!user?.id || allSongs.length === 0) return;
-    
-    try {
-      const key = `recently_played_${user.id}`;
-      const recentIds = JSON.parse(localStorage.getItem(key) ?? '[]') as string[];
-      const songs = recentIds
-        .map(id => allSongs.find(s => s.id === id))
-        .filter((s): s is Song => !!s)
-        .slice(0, 6);
-      setRecentSongs(songs);
-    } catch (error) {
-      console.error('Failed to fetch recent songs from localStorage:', error);
-      setRecentSongs([]);
-    }
-  };
-
-  // Fetch recently played songs on mount and when user changes
-  useEffect(() => {
-    fetchRecentSongsFromLocalStorage();
-  }, [user?.id, allSongs]);
-
-  // Listen for recently played updates
-  useEffect(() => {
-    const handleRecentlyPlayedUpdated = (event: Event) => {
-      if (event instanceof CustomEvent) {
-        const { userId } = event.detail;
-        if (userId === user?.id) {
-          fetchRecentSongsFromLocalStorage();
-        }
-      }
-    };
-
-    window.addEventListener('recentlyPlayedUpdated', handleRecentlyPlayedUpdated);
-    return () => {
-      window.removeEventListener('recentlyPlayedUpdated', handleRecentlyPlayedUpdated);
-    };
-  }, [user?.id, allSongs]);
 
   const handlePlaylistClick = (id: string) => {
     // Navigate to playlist view (works for both user and featured playlists)
