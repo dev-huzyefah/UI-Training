@@ -1,19 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { PiHouseBold, PiMagnifyingGlassBold, PiMusicNotesBold, PiPlusBold, PiSignOutBold, PiListBold, PiStarBold } from 'react-icons/pi';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { usePlaylist } from '@/features/playlists/hooks/usePlaylist';
-import songsData from '@/shared/data/songs.json';
+import { playlistsAPI } from '@/shared/services/api';
 import type { Playlist } from '@/shared/types/types';
 import './Sidebar.css';
-
-const featured = songsData.featuredPlaylists as Playlist[];
 
 export function Sidebar() {
   const { user, logout } = useAuth();
   const { playlists } = usePlaylist();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [featured, setFeatured] = useState<Playlist[]>([]);
+
+  // Fetch featured playlists on mount
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const featuredPlaylists = await playlistsAPI.getFeaturedPlaylists();
+        setFeatured(featuredPlaylists);
+      } catch (error) {
+        console.error('Failed to fetch featured playlists:', error);
+      }
+    };
+
+    fetchFeatured();
+  }, []);
 
   const handleLogout = () => {
     logout();

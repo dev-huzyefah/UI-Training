@@ -8,6 +8,17 @@ interface User {
   avatarUrl: string;
 }
 
+interface Song {
+  id: string;
+  title: string;
+  artist: string;
+  album: string;
+  duration: number;
+  coverUrl: string;
+  audioUrl: string;
+  genre: string;
+}
+
 interface Playlist {
   id: string;
   userId: string;
@@ -16,6 +27,7 @@ interface Playlist {
   coverUrl: string;
   songIds: string[];
   createdAt: string;
+  isFeatured?: boolean;
 }
 
 interface RecentlyPlayed {
@@ -63,6 +75,30 @@ export const userAPI = {
     if (!response.ok) throw new Error('Failed to create user');
     const { password: _, ...userWithoutPassword } = await response.json() as User;
     return userWithoutPassword as User;
+  }
+};
+
+// Song API
+export const songAPI = {
+  async getAllSongs(): Promise<Song[]> {
+    const response = await fetch(`${API_URL}/songs`);
+    if (!response.ok) throw new Error('Failed to fetch songs');
+    return response.json() as Promise<Song[]>;
+  },
+
+  async getSongById(id: string): Promise<Song> {
+    const response = await fetch(`${API_URL}/songs/${id}`);
+    if (!response.ok) throw new Error('Song not found');
+    return response.json() as Promise<Song>;
+  }
+};
+
+// Featured Playlists API
+export const playlistsAPI = {
+  async getFeaturedPlaylists(): Promise<Playlist[]> {
+    const response = await fetch(`${API_URL}/featuredPlaylists`);
+    if (!response.ok) throw new Error('Failed to fetch featured playlists');
+    return response.json() as Promise<Playlist[]>;
   }
 };
 
