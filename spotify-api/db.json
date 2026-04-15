@@ -1,9 +1,4 @@
-import jsonServer from 'json-server';
-import path from 'path';
-
-// I am inlining your data here to ensure it is always available to the function 
-// regardless of how Vercel bundles the file system.
-const data = {
+{
   "users": [
     {
       "id": "kjN-ZEZ8iW4",
@@ -298,17 +293,6 @@ const data = {
       "createdAt": "2026-04-14T14:50:55.885Z"
     }
   ],
-  "recentlyPlayed": []
-};
-
-const server = jsonServer.create();
-const router = jsonServer.router(data);
-const middlewares = jsonServer.defaults();
-
-server.use(middlewares);
-server.use(jsonServer.rewriter({
-  '/api/*': '/$1'
-}));
-server.use(router);
-
-export default server;
+  "recentlyPlayed": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
