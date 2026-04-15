@@ -9,7 +9,7 @@ export function CreatePlaylistPage() {
   const { createPlaylist } = usePlaylist();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
     try {

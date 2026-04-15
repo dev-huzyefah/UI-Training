@@ -12,7 +12,7 @@ export function LoginForm() {
     return <Navigate to="/" replace />;
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     clearError();
     void login({ email, password });

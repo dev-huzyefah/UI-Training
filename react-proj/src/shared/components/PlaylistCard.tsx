@@ -1,4 +1,3 @@
-import { PiPlayFill } from 'react-icons/pi';
 import type { Playlist } from '@/shared/types/types';
 import './PlaylistCard.css';
 

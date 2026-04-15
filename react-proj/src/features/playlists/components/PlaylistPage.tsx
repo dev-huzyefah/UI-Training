@@ -17,7 +17,7 @@ export function PlaylistPage() {
   const [showAddSongs, setShowAddSongs] = useState(false);
   const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [featured, setFeatured] = useState<Playlist[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_, setLoading] = useState(true);
 
   // Fetch songs and featured playlists on mount
   useEffect(() => {

@@ -12,7 +12,7 @@ export function SearchPage() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
   const [allSongs, setAllSongs] = useState<Song[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_, setLoading] = useState(true);
 
   // Fetch songs on mount
   useEffect(() => {

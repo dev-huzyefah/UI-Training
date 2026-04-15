@@ -13,7 +13,7 @@ export function SignupForm() {
     return <Navigate to="/" replace />;
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     clearError();
     void signup({ displayName, email, password });
