@@ -1,12 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PiMusicNotesBold } from 'react-icons/pi';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { usePlaylist } from '@/features/playlists/hooks/usePlaylist';
 import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 import { SongRow } from '@/shared/components/SongRow';
 import { PlaylistCard } from '@/shared/components/PlaylistCard';
-import { EmptyState } from '@/shared/components/EmptyState';
 import { songAPI, playlistsAPI } from '@/shared/services/api';
 import type { Song, Playlist } from '@/shared/types/types';
 import './HomePage.css';
@@ -22,7 +20,7 @@ export function HomePage() {
   const { user } = useAuth();
   const { playlists, addSongToPlaylist } = usePlaylist();
   const navigate = useNavigate();
-  const [addingPlaylistFor, setAddingPlaylistFor] = useState<string | null>(null);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [featured, setFeatured] = useState<Playlist[]>([]);
   const [_, setLoading] = useState(true);
@@ -68,7 +66,8 @@ export function HomePage() {
       navigate('/playlists/new');
       return;
     }
-    setAddingPlaylistFor(songId);
+    const song = allSongs.find(s => s.id === songId);
+    if (song) setSelectedSong(song);
   };
 
   return (
@@ -135,67 +134,94 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Quick Add to Playlist overlay */}
-      {addingPlaylistFor && (
-        <div
-          className="add-to-playlist-overlay"
-          onClick={() => setAddingPlaylistFor(null)}
+      {/* Add to Playlist Modal */}
+      {selectedSong && (
+        <div 
+          className="add-songs-overlay" 
+          onClick={() => setSelectedSong(null)}
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0,0,0,0.4)',
+            background: 'rgba(0,0,0,0.7)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 200,
+            zIndex: 1000,
+            padding: 'var(--space-4)'
           }}
         >
-          <div
+          <div 
+            className="add-to-playlist-modal"
             onClick={e => e.stopPropagation()}
             style={{
               background: 'var(--color-surface)',
               borderRadius: 'var(--radius-lg)',
               padding: 'var(--space-6)',
-              minWidth: '280px',
-              maxWidth: '360px',
-              boxShadow: 'var(--shadow-lg)',
-              animation: 'scaleIn var(--transition-base) ease-out',
+              width: '100%',
+              maxWidth: '400px',
+              maxHeight: '80vh',
+              overflowY: 'auto',
+              boxShadow: 'var(--shadow-lg)'
             }}
           >
-            <h3 style={{ marginBottom: 'var(--space-4)', fontSize: 'var(--text-lg)', fontWeight: 600 }}>
+            <h2 style={{ marginBottom: 'var(--space-4)', fontSize: 'var(--text-lg)', fontWeight: 600 }}>
               Add to Playlist
-            </h3>
-            {playlists.length === 0 ? (
-              <EmptyState
-                icon={<PiMusicNotesBold />}
-                title="No playlists yet"
-                message="Create your first playlist to start organizing your music."
-              />
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-                {playlists.map(pl => (
+            </h2>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-6)' }}>
+              Choose a playlist for "{selectedSong.title}"
+            </p>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+              {playlists.length === 0 ? (
+                <p style={{ textAlign: 'center', color: 'var(--color-text-tertiary)', padding: 'var(--space-4)' }}>
+                  You haven't created any playlists yet.
+                </p>
+              ) : (
+                playlists.map(playlist => (
                   <button
-                    key={pl.id}
-                    onClick={() => {
-                      addSongToPlaylist(pl.id, addingPlaylistFor);
-                      setAddingPlaylistFor(null);
+                    key={playlist.id}
+                    onClick={async () => {
+                      await addSongToPlaylist(playlist.id, selectedSong.id);
+                      setSelectedSong(null);
                     }}
                     style={{
-                      padding: 'var(--space-3) var(--space-4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--space-3)',
+                      padding: 'var(--space-3)',
                       borderRadius: 'var(--radius-md)',
+                      background: 'var(--color-surface-hover)',
+                      width: '100%',
                       textAlign: 'left',
-                      fontSize: 'var(--text-base)',
-                      color: 'var(--color-text-primary)',
-                      transition: 'background var(--transition-fast)',
+                      transition: 'background 0.2s'
                     }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-surface-hover)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                   >
-                    {pl.name}
+                    <img 
+                      src={playlist.coverUrl} 
+                      alt={playlist.name} 
+                      style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-sm)', objectFit: 'cover' }}
+                    />
+                    <span style={{ fontWeight: 500 }}>{playlist.name}</span>
                   </button>
-                ))}
-              </div>
-            )}
+                ))
+              )}
+            </div>
+            
+            <button 
+              onClick={() => setSelectedSong(null)}
+              style={{
+                marginTop: 'var(--space-6)',
+                width: '100%',
+                padding: 'var(--space-3)',
+                borderRadius: 'var(--radius-md)',
+                background: 'transparent',
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-text-primary)',
+                fontWeight: 600
+              }}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
