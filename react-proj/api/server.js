@@ -18,4 +18,4 @@ server.use(jsonServer.rewriter({
 }));
 server.use(router);
 
-module.exports = server;
+export default server;
