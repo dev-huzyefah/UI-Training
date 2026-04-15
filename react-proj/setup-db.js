@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 const dbPath = path.join(__dirname, "db.json");
 const examplePath = path.join(__dirname, "db.example.json");
