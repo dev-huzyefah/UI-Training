@@ -5,10 +5,9 @@ import { fileURLToPath } from "url";
 
 const server = jsonServer.create();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Path to your db.json - Vercel will bundle this if it's referenced
-const router = jsonServer.router(path.join(__dirname, '../db.json'));
+const router = jsonServer.router(path.resolve(__dirname, '../db.json'));
 const middlewares = jsonServer.defaults();
 
 server.use(middlewares);
