@@ -114,12 +114,16 @@
 /* Responsive */
 @media (max-width: 768px) {
   .song-row {
-    grid-template-columns: 40px 1fr auto;
+    grid-template-columns: 40px 1fr auto auto;
     gap: var(--space-3);
   }
 
   .song-row__number,
   .song-row__album {
     display: none;
+  }
+
+  .song-row__actions {
+    opacity: 1;
   }
 }
