@@ -54,7 +54,7 @@ export function PlayerBar() {
       <div className="player-bar__center">
         <div className="player-bar__controls">
           <button
-            className="player-bar__control-btn"
+            className="player-bar__control-btn player-bar__control-btn--prev"
             onClick={prevTrack}
             title="Previous"
             aria-label="Previous track"
@@ -74,7 +74,7 @@ export function PlayerBar() {
           </button>
 
           <button
-            className="player-bar__control-btn"
+            className="player-bar__control-btn player-bar__control-btn--next"
             onClick={nextTrack}
             title="Next"
             aria-label="Next track"

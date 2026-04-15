@@ -141,44 +141,83 @@
 /* Responsive */
 @media (max-width: 768px) {
   .player-bar {
-    left: var(--space-3);
-    right: var(--space-3);
-    bottom: var(--space-3);
-    height: 72px;
+    left: var(--space-4);
+    right: var(--space-4);
+    bottom: var(--space-4);
+    height: 64px;
     padding: 0 var(--space-4);
     gap: var(--space-3);
     border-radius: var(--radius-lg);
+    overflow: hidden; /* For the mini progress bar */
   }
 
   .player-bar__song {
     min-width: 0;
     max-width: none;
+    flex: 1;
   }
 
   .player-bar__cover {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .player-bar__song-title {
+    font-size: var(--text-sm);
+  }
+
+  .player-bar__song-artist {
+    font-size: var(--text-xs);
   }
 
   .player-bar__center {
     flex: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
   }
 
-  .player-bar__progress,
+  /* Position progress bar at the top on mobile */
+  .player-bar__center .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+    height: 2px;
+  }
+
+  .player-bar__center .progress-bar__time {
+    display: none;
+  }
+
+  .player-bar__center .progress-bar__track {
+    height: 2px;
+    border-radius: 0;
+  }
+
+  .player-bar__center .progress-bar__thumb {
+    display: none;
+  }
+
   .player-bar__right {
     display: none;
   }
 
   .player-bar__controls {
-    gap: var(--space-2);
+    gap: var(--space-1);
   }
 
-  .player-bar__control-btn {
-    display: none;
+  .player-bar__control-btn--prev {
+    display: flex;
+  }
+
+  .player-bar__control-btn--next {
+    display: flex;
   }
 
   .player-bar__play-btn {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
 }
