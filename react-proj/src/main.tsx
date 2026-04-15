@@ -1,9 +1,22 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from '@/features/auth/store/authStore';
+import { PlayerProvider } from '@/features/player/store/playerStore';
+import { PlaylistProvider } from '@/features/playlists/store/playlistStore';
+import App from './App';
+import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <AuthProvider>
+        <PlayerProvider>
+          <PlaylistProvider>
+            <App />
+          </PlaylistProvider>
+        </PlayerProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </StrictMode>,
-)
+);
