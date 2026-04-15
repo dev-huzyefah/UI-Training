@@ -1,12 +1,12 @@
 {
   "name": "spotify-api",
   "version": "1.0.0",
-  "type": "module",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "json-server --watch db.json --port 3001"
   },
   "dependencies": {
-    "json-server": "^1.0.0-beta.15"
+    "json-server": "^0.17.4"
   }
 }

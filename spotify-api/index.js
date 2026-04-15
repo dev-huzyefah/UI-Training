@@ -1,9 +1,8 @@
-import jsonServer from 'json-server';
-import path from 'path';
+const jsonServer = require('json-server');
+const path = require('path');
 
 const server = jsonServer.create();
-// Use path.resolve with process.cwd() for absolute reliability
-const router = jsonServer.router(path.resolve(process.cwd(), 'db.json'));
+const router = jsonServer.router(path.join(__dirname, 'db.json'));
 const middlewares = jsonServer.defaults();
 
 const port = process.env.PORT || 3001;

@@ -293,6 +293,5 @@
       "createdAt": "2026-04-14T14:50:55.885Z"
     }
   ],
-  "recentlyPlayed": [],
-  "$schema": "./node_modules/json-server/schema.json"
+  "recentlyPlayed": []
 }
