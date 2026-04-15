@@ -2,6 +2,7 @@ import { createContext, useState, useRef, useCallback, useEffect, type ReactNode
 import type { Song } from '@/shared/types/types';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
+import { songAPI } from '@/shared/services/api';
 
 export interface PlayerStore {
   currentSong: Song | null;
@@ -48,15 +49,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
     const handleDurationChange = () => setDuration(audio.duration || 0);
     const handleEnded = () => {
-      // auto-play next
-      setQueueIndex(prev => {
-        const nextIdx = prev + 1;
-        if (nextIdx < queue.length) {
-          return nextIdx;
-        }
-        setIsPlaying(false);
-        return prev;
-      });
+      nextTrackRef.current();
     };
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
@@ -130,11 +123,35 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
   }, [currentSong]);
 
-  const nextTrack = useCallback(() => {
+  const nextTrack = useCallback(async () => {
     if (queueIndex < queue.length - 1) {
       setQueueIndex(prev => prev + 1);
+    } else {
+      // End of queue - autoplay random song
+      try {
+        const allSongs = await songAPI.getAllSongs();
+        if (allSongs.length > 0) {
+          // Filter out current song to avoid immediate repeat if possible
+          const otherSongs = allSongs.filter(s => s.id !== currentSong?.id);
+          const pool = otherSongs.length > 0 ? otherSongs : allSongs;
+          const randomSong = pool[Math.floor(Math.random() * pool.length)];
+          
+          setQueue(prev => [...prev, randomSong]);
+          setQueueIndex(prev => prev + 1);
+        } else {
+          setIsPlaying(false);
+        }
+      } catch (error) {
+        console.error('Autoplay failed:', error);
+        setIsPlaying(false);
+      }
     }
-  }, [queueIndex, queue.length]);
+  }, [queueIndex, queue.length, currentSong?.id]);
+
+  const nextTrackRef = useRef(nextTrack);
+  useEffect(() => {
+    nextTrackRef.current = nextTrack;
+  }, [nextTrack]);
 
   const prevTrack = useCallback(() => {
     if (audioRef.current && audioRef.current.currentTime > 3) {
