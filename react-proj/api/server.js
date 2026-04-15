@@ -1,17 +1,311 @@
-
-import path from 'path';
 import jsonServer from 'json-server';
-import { fileURLToPath } from "url";
+import path from 'path';
+
+// I am inlining your data here to ensure it is always available to the function 
+// regardless of how Vercel bundles the file system.
+const data = {
+  "users": [
+    {
+      "id": "kjN-ZEZ8iW4",
+      "email": "huzyefah.saqib@devsinc.com",
+      "password": "123456",
+      "displayName": "Huzyefah",
+      "avatarUrl": "https://picsum.photos/id/37/200/200"
+    },
+    {
+      "id": "YcdS3wipU04",
+      "email": "huzyefah@devsinc.com",
+      "password": "123456",
+      "displayName": "H",
+      "avatarUrl": "https://picsum.photos/id/59/200/200"
+    }
+  ],
+  "songs": [
+    {
+      "id": "s1",
+      "title": "Midnight Dreams",
+      "artist": "Luna Waves",
+      "album": "Ethereal Nights",
+      "duration": 234,
+      "coverUrl": "https://picsum.photos/seed/album1/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      "genre": "Electronic"
+    },
+    {
+      "id": "s2",
+      "title": "Golden Hour",
+      "artist": "Solar Drift",
+      "album": "Warm Frequencies",
+      "duration": 198,
+      "coverUrl": "https://picsum.photos/seed/album2/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      "genre": "Indie"
+    },
+    {
+      "id": "s3",
+      "title": "Velvet Rain",
+      "artist": "Neon Atlas",
+      "album": "City Glow",
+      "duration": 256,
+      "coverUrl": "https://picsum.photos/seed/album3/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+      "genre": "Synth Pop"
+    },
+    {
+      "id": "s4",
+      "title": "Ocean Pulse",
+      "artist": "Deep Current",
+      "album": "Tidal Shift",
+      "duration": 312,
+      "coverUrl": "https://picsum.photos/seed/album4/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+      "genre": "Ambient"
+    },
+    {
+      "id": "s5",
+      "title": "Crystal Cascade",
+      "artist": "Luna Waves",
+      "album": "Ethereal Nights",
+      "duration": 187,
+      "coverUrl": "https://picsum.photos/seed/album5/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+      "genre": "Electronic"
+    },
+    {
+      "id": "s6",
+      "title": "Starlit Path",
+      "artist": "Cosmos Echo",
+      "album": "Nebula Dreams",
+      "duration": 245,
+      "coverUrl": "https://picsum.photos/seed/album6/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+      "genre": "Dream Pop"
+    },
+    {
+      "id": "s7",
+      "title": "Ember Glow",
+      "artist": "Solar Drift",
+      "album": "Warm Frequencies",
+      "duration": 203,
+      "coverUrl": "https://picsum.photos/seed/album7/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+      "genre": "Indie"
+    },
+    {
+      "id": "s8",
+      "title": "Neon Skyline",
+      "artist": "Neon Atlas",
+      "album": "City Glow",
+      "duration": 278,
+      "coverUrl": "https://picsum.photos/seed/album8/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+      "genre": "Synth Pop"
+    },
+    {
+      "id": "s9",
+      "title": "Quiet Meridian",
+      "artist": "Deep Current",
+      "album": "Tidal Shift",
+      "duration": 341,
+      "coverUrl": "https://picsum.photos/seed/album9/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+      "genre": "Ambient"
+    },
+    {
+      "id": "s10",
+      "title": "Paper Lanterns",
+      "artist": "Cosmos Echo",
+      "album": "Nebula Dreams",
+      "duration": 215,
+      "coverUrl": "https://picsum.photos/seed/album10/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
+      "genre": "Dream Pop"
+    },
+    {
+      "id": "s11",
+      "title": "Drift Protocol",
+      "artist": "Byte Horizon",
+      "album": "Digital Bloom",
+      "duration": 267,
+      "coverUrl": "https://picsum.photos/seed/album11/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3",
+      "genre": "Electronic"
+    },
+    {
+      "id": "s12",
+      "title": "Sage & Honey",
+      "artist": "Willow Ray",
+      "album": "Earth Tones",
+      "duration": 192,
+      "coverUrl": "https://picsum.photos/seed/album12/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
+      "genre": "Folk"
+    },
+    {
+      "id": "s13",
+      "title": "Chrome Reflections",
+      "artist": "Byte Horizon",
+      "album": "Digital Bloom",
+      "duration": 228,
+      "coverUrl": "https://picsum.photos/seed/album13/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3",
+      "genre": "Electronic"
+    },
+    {
+      "id": "s14",
+      "title": "Amber Fields",
+      "artist": "Willow Ray",
+      "album": "Earth Tones",
+      "duration": 175,
+      "coverUrl": "https://picsum.photos/seed/album14/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",
+      "genre": "Folk"
+    },
+    {
+      "id": "s15",
+      "title": "Binary Sunset",
+      "artist": "Neon Atlas",
+      "album": "Afterimage",
+      "duration": 295,
+      "coverUrl": "https://picsum.photos/seed/album15/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
+      "genre": "Synth Pop"
+    },
+    {
+      "id": "s16",
+      "title": "Coral Dusk",
+      "artist": "Luna Waves",
+      "album": "Tidepool",
+      "duration": 210,
+      "coverUrl": "https://picsum.photos/seed/album16/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3",
+      "genre": "Electronic"
+    },
+    {
+      "id": "s17",
+      "title": "Winding River",
+      "artist": "Deep Current",
+      "album": "Tidal Shift",
+      "duration": 330,
+      "coverUrl": "https://picsum.photos/seed/album17/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+      "genre": "Ambient"
+    },
+    {
+      "id": "s18",
+      "title": "Glass Gardens",
+      "artist": "Cosmos Echo",
+      "album": "Prism Light",
+      "duration": 248,
+      "coverUrl": "https://picsum.photos/seed/album18/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+      "genre": "Dream Pop"
+    },
+    {
+      "id": "s19",
+      "title": "Mosaic Dawn",
+      "artist": "Solar Drift",
+      "album": "Warm Frequencies",
+      "duration": 222,
+      "coverUrl": "https://picsum.photos/seed/album19/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+      "genre": "Indie"
+    },
+    {
+      "id": "s20",
+      "title": "Phantom Signal",
+      "artist": "Byte Horizon",
+      "album": "Digital Bloom",
+      "duration": 289,
+      "coverUrl": "https://picsum.photos/seed/album20/300/300",
+      "audioUrl": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+      "genre": "Electronic"
+    }
+  ],
+  "featuredPlaylists": [
+    {
+      "id": "pl-featured-1",
+      "name": "Late Night Drives",
+      "description": "Atmospheric tracks for midnight journeys",
+      "coverUrl": "https://picsum.photos/seed/playlist1/300/300",
+      "songIds": [
+        "s1",
+        "s3",
+        "s4",
+        "s6",
+        "s9",
+        "s17"
+      ],
+      "createdAt": "2026-01-15T00:00:00Z",
+      "isFeatured": true
+    },
+    {
+      "id": "pl-featured-2",
+      "name": "Digital Sunrise",
+      "description": "Electronic beats to start your day",
+      "coverUrl": "https://picsum.photos/seed/playlist2/300/300",
+      "songIds": [
+        "s11",
+        "s13",
+        "s16",
+        "s20",
+        "s5"
+      ],
+      "createdAt": "2026-02-10T00:00:00Z",
+      "isFeatured": true
+    },
+    {
+      "id": "pl-featured-3",
+      "name": "Acoustic Warmth",
+      "description": "Gentle folk and indie for rainy afternoons",
+      "coverUrl": "https://picsum.photos/seed/playlist3/300/300",
+      "songIds": [
+        "s2",
+        "s7",
+        "s12",
+        "s14",
+        "s19"
+      ],
+      "createdAt": "2026-03-01T00:00:00Z",
+      "isFeatured": true
+    },
+    {
+      "id": "pl-featured-4",
+      "name": "Dreamscape",
+      "description": "Ethereal sounds for deep focus",
+      "coverUrl": "https://picsum.photos/seed/playlist4/300/300",
+      "songIds": [
+        "s6",
+        "s10",
+        "s18",
+        "s8",
+        "s15"
+      ],
+      "createdAt": "2026-03-20T00:00:00Z",
+      "isFeatured": true
+    }
+  ],
+  "playlists": [
+    {
+      "id": "vc1Q3aqOY6c",
+      "userId": "kjN-ZEZ8iW4",
+      "name": "new playlist",
+      "description": "",
+      "coverUrl": "https://picsum.photos/seed/1776178255885/300/300",
+      "songIds": [
+        "s3"
+      ],
+      "createdAt": "2026-04-14T14:50:55.885Z"
+    }
+  ],
+  "recentlyPlayed": []
+};
 
 const server = jsonServer.create();
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// Path to your db.json - Vercel will bundle this if it's referenced
-const router = jsonServer.router(path.resolve(__dirname, '../db.json'));
+const router = jsonServer.router(data);
 const middlewares = jsonServer.defaults();
 
 server.use(middlewares);
-// Optional: Rewriting /api/* to /* so json-server handles it correctly
 server.use(jsonServer.rewriter({
   '/api/*': '/$1'
 }));
