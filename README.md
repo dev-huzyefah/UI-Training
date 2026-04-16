@@ -7,18 +7,24 @@ Welcome to the UI Training repository. This project contains multiple learning m
 This repository is organized into three main modules:
 
 ### 1. [HTML-CSS-Proj](html-css-proj/)
+
 A collection of custom-built, reusable components using vanilla HTML, CSS, and JavaScript.
+
 - **Focus**: Semantic HTML, CSS Variables, and Native JS interaction.
 - **How to view**: Open `html-css-proj/index.html` in your browser.
 
 ### 2. [React-Proj (Spotify Clone)](react-proj/)
+
 A sophisticated music streaming application built with React and TypeScript.
+
 - **Features**: Authentication, Playback Queue, Playlist Management, and Search.
 - **Focus**: Component Composition, Custom Hooks, Context API, and Responsive Design.
 - **Autoplay**: Features an intelligent "Radio" mode that plays random songs when your queue ends.
 
 ### 3. [Spotify-API](spotify-api/)
+
 A dedicated mock backend service for the React application.
+
 - **Tech**: Node.js, `json-server`.
 - **Focus**: Mock REST API development, data persistence, and separate microservice deployment.
 
@@ -27,6 +33,7 @@ A dedicated mock backend service for the React application.
 ## 🚀 Getting Started
 
 ### React Application
+
 1. Navigate to the directory:
    ```bash
    cd react-proj
@@ -41,6 +48,7 @@ A dedicated mock backend service for the React application.
    ```
 
 ### API Service (Local)
+
 1. Navigate to the directory:
    ```bash
    cd spotify-api
@@ -65,7 +73,9 @@ A dedicated mock backend service for the React application.
 ## 📸 Preview
 
 ### HTML/CSS Project
+
 ![Website Screenshot](html-css-proj/assets/full-screen-capture.png)
 
 ### React Project
-![Spotify Clone Screenshot](react-proj/public/screenshot-placeholder.png)
+
+![Spotify Clone Screenshot](react-proj/public/spotify-placeholder-image.png)
