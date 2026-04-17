@@ -86,86 +86,45 @@ export function SearchPage() {
         <div 
           className="add-songs-overlay" 
           onClick={() => setSelectedSong(null)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: 'var(--space-4)'
-          }}
         >
           <div 
             className="add-to-playlist-modal"
             onClick={e => e.stopPropagation()}
-            style={{
-              background: 'var(--color-surface)',
-              borderRadius: 'var(--radius-lg)',
-              padding: 'var(--space-6)',
-              width: '100%',
-              maxWidth: '400px',
-              maxHeight: '80vh',
-              overflowY: 'auto',
-              boxShadow: 'var(--shadow-lg)'
-            }}
           >
-            <h2 style={{ marginBottom: 'var(--space-4)', fontSize: 'var(--text-lg)', fontWeight: 600 }}>
-              Add to Playlist
-            </h2>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', marginBottom: 'var(--space-6)' }}>
+            <h2>Add to Playlist</h2>
+            <p className="add-to-playlist-modal__description">
               Choose a playlist for "{selectedSong.title}"
             </p>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+            <div className="add-to-playlist-modal__list">
               {playlists.length === 0 ? (
-                <p style={{ textAlign: 'center', color: 'var(--color-text-tertiary)', padding: 'var(--space-4)' }}>
+                <p className="add-to-playlist-modal__empty">
                   You haven't created any playlists yet.
                 </p>
               ) : (
                 playlists.map(playlist => (
                   <button
                     key={playlist.id}
+                    className="add-to-playlist-modal__item"
                     onClick={async () => {
                       await addSongToPlaylist(playlist.id, selectedSong.id);
                       setSelectedSong(null);
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 'var(--space-3)',
-                      padding: 'var(--space-3)',
-                      borderRadius: 'var(--radius-md)',
-                      background: 'var(--color-surface-hover)',
-                      width: '100%',
-                      textAlign: 'left',
-                      transition: 'background 0.2s'
                     }}
                   >
                     <img 
                       src={playlist.coverUrl} 
                       alt={playlist.name} 
-                      style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-sm)', objectFit: 'cover' }}
+                      className="add-to-playlist-modal__item-img"
                     />
-                    <span style={{ fontWeight: 500 }}>{playlist.name}</span>
+                    <span className="add-to-playlist-modal__item-name">{playlist.name}</span>
                   </button>
                 ))
               )}
             </div>
             
             <button 
+              className="add-to-playlist-modal__cancel"
               onClick={() => setSelectedSong(null)}
-              style={{
-                marginTop: 'var(--space-6)',
-                width: '100%',
-                padding: 'var(--space-3)',
-                borderRadius: 'var(--radius-md)',
-                background: 'transparent',
-                border: '1px solid var(--color-border)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 600
-              }}
             >
               Cancel
             </button>
