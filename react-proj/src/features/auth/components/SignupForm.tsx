@@ -1,16 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '@/shared/components/Toast/ToastContext';
 import { ROUTES } from '@/shared/constants';
+import { FormInput } from './FormInput';
 import './Auth.css';
+
+const validationSchema = Yup.object({
+  displayName: Yup.string()
+    .required('Display name is required')
+    .min(2, 'Display name must be at least 2 characters'),
+  email: Yup.string()
+    .email('Invalid email address')
+    .required('Email is required'),
+  password: Yup.string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+});
 
 export function SignupForm() {
   const { signup, isAuthenticated, error, clearError, isLoading } = useAuth();
   const { showToast } = useToast();
-  const [displayName, setDisplayName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   useEffect(() => {
     if (error) {
@@ -25,12 +37,6 @@ export function SignupForm() {
     return <Navigate to={ROUTES.HOME} replace />;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearError();
-    await signup({ displayName, email, password });
-  };
-
   return (
     <div className="auth-page">
       <div className="auth-card">
@@ -44,60 +50,58 @@ export function SignupForm() {
         <h1 className="auth-card__title">Start listening</h1>
         <p className="auth-card__subtitle">Create your account to get started</p>
 
-        <form className="auth-form" onSubmit={handleSubmit} id="signup-form">
+        <Formik
+          initialValues={{
+            displayName: '',
+            email: '',
+            password: '',
+          }}
+          validationSchema={validationSchema}
+          onSubmit={async (values) => {
+            clearError();
+            await signup(values);
+          }}
+        >
+          {({ isValid, dirty }) => (
+            <Form className="auth-form" id="signup-form">
+              <FormInput
+                label="Display Name"
+                name="displayName"
+                type="text"
+                placeholder="What should we call you?"
+                autoComplete="name"
+                id="signup-name"
+              />
 
-          <div className="auth-form__field">
-            <label className="auth-form__label" htmlFor="signup-name">Display Name</label>
-            <input
-              className="auth-form__input"
-              id="signup-name"
-              type="text"
-              placeholder="What should we call you?"
-              value={displayName}
-              onChange={e => setDisplayName(e.target.value)}
-              required
-              autoComplete="name"
-            />
-          </div>
+              <FormInput
+                label="Email"
+                name="email"
+                type="email"
+                placeholder="your@email.com"
+                autoComplete="email"
+                id="signup-email"
+              />
 
-          <div className="auth-form__field">
-            <label className="auth-form__label" htmlFor="signup-email">Email</label>
-            <input
-              className="auth-form__input"
-              id="signup-email"
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
-          </div>
+              <FormInput
+                label="Password"
+                name="password"
+                type="password"
+                placeholder="At least 6 characters"
+                autoComplete="new-password"
+                id="signup-password"
+              />
 
-          <div className="auth-form__field">
-            <label className="auth-form__label" htmlFor="signup-password">Password</label>
-            <input
-              className="auth-form__input"
-              id="signup-password"
-              type="password"
-              placeholder="At least 6 characters"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              minLength={6}
-              autoComplete="new-password"
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            className="auth-form__submit" 
-            id="signup-submit"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
-          </button>
-        </form>
+              <button 
+                type="submit" 
+                className="auth-form__submit" 
+                id="signup-submit"
+                disabled={isLoading || !isValid || !dirty}
+              >
+                {isLoading ? 'Creating Account...' : 'Create Account'}
+              </button>
+            </Form>
+          )}
+        </Formik>
 
         <p className="auth-card__footer">
           Already have an account? <Link to={ROUTES.LOGIN}>Sign in</Link>
@@ -106,3 +110,5 @@ export function SignupForm() {
     </div>
   );
 }
+
+
