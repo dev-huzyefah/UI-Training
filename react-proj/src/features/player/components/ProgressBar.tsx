@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import './ProgressBar.css';
 
 interface ProgressBarProps {
@@ -15,40 +14,26 @@ function formatTime(seconds: number): string {
 }
 
 export function ProgressBar({ currentTime, duration, onSeek }: ProgressBarProps) {
-  const handleProgressClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const pct = (e.clientX - rect.left) / rect.width;
-      onSeek(pct * duration);
-    },
-    [onSeek, duration]
-  );
-
   const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
     <div className="progress-bar">
       <span className="progress-bar__time">{formatTime(currentTime)}</span>
-      <div
-        className="progress-bar__track"
-        onClick={handleProgressClick}
-        role="slider"
-        aria-label="Song progress"
-        aria-valuemin={0}
-        aria-valuemax={duration}
-        aria-valuenow={currentTime}
-        id="progress-bar-track"
-      >
-        <div
-          className="progress-bar__fill"
-          style={{ width: `${progressPct}%` }}
-        />
-        <div
-          className="progress-bar__thumb"
-          style={{ left: `${progressPct}%` }}
-        />
-      </div>
+      
+      <input
+        type="range"
+        className="progress-bar__input"
+        min={0}
+        max={duration || 0}
+        value={currentTime || 0}
+        onChange={(e) => onSeek(Number(e.target.value))}
+        style={{ '--progress': `${progressPct}%` } as any}
+        id="progress-bar-input"
+        aria-label="Progress bar"
+      />
+
       <span className="progress-bar__time">{formatTime(duration)}</span>
     </div>
   );
 }
+

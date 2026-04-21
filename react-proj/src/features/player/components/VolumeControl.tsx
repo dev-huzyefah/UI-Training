@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import {
   PiSpeakerHighBold,
   PiSpeakerLowBold,
@@ -19,16 +18,8 @@ export function VolumeControl({
   onVolumeChange,
   onToggleMute,
 }: VolumeControlProps) {
-  const handleVolumeClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const pct = (e.clientX - rect.left) / rect.width;
-      onVolumeChange(Math.max(0, Math.min(1, pct)));
-    },
-    [onVolumeChange]
-  );
-
-  const volumePct = isMuted ? 0 : volume * 100;
+  const currentVolume = isMuted ? 0 : volume;
+  const volumePct = currentVolume * 100;
 
   const VolumeIcon = isMuted || volume === 0
     ? PiSpeakerXBold
@@ -47,21 +38,20 @@ export function VolumeControl({
       >
         <VolumeIcon size={20} />
       </button>
-      <div
-        className="volume-control__track"
-        onClick={handleVolumeClick}
-        role="slider"
-        aria-label="Volume"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={volumePct}
-        id="volume-track"
-      >
-        <div
-          className="volume-control__fill"
-          style={{ width: `${volumePct}%` }}
-        />
-      </div>
+      
+      <input
+        type="range"
+        className="volume-control__input"
+        min={0}
+        max={1}
+        step={0.01}
+        value={currentVolume}
+        onChange={(e) => onVolumeChange(Number(e.target.value))}
+        style={{ '--progress': `${volumePct}%` } as any}
+        id="volume-input"
+        aria-label="Volume level"
+      />
     </div>
   );
 }
+
