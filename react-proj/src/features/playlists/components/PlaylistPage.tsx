@@ -58,7 +58,7 @@ export function PlaylistPage() {
     if (!id) return undefined;
     const userPl = getPlaylist(id);
     if (userPl) return { ...userPl, isUserPlaylist: true };
-    const featuredPl = featured.find(f => f.id === id);
+    const featuredPl = featured.find(f => String(f.id) === String(id));
     if (featuredPl) return { ...featuredPl, isUserPlaylist: false };
     return undefined;
   }, [id, getPlaylist, featured]);

@@ -102,7 +102,7 @@ export function PlaylistProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const getPlaylist = useCallback((id: string) => {
-    return playlists.find(p => p.id === id);
+    return playlists.find(p => String(p.id) === String(id));
   }, [playlists]);
 
   return (
