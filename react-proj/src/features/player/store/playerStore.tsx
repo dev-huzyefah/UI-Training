@@ -3,7 +3,8 @@ import type { Song } from '@/shared/types/types';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useToast } from '@/shared/components/Toast/ToastContext';
 import { songAPI } from '@/shared/services/api';
-import { PLAYER } from '@/shared/constants';
+import { PLAYER, STORAGE_KEYS } from '@/shared/constants';
+import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 
 export interface PlayerStore {
   currentSong: Song | null;
@@ -40,6 +41,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   
+  const [, setRecentlyPlayedIds] = useLocalStorage<string[]>(
+    auth.user?.id ? `${STORAGE_KEYS.RECENTLY_PLAYED_PREFIX}${auth.user.id}` : '',
+    []
+  );
 
   // Initialize audio element
   useEffect(() => {
@@ -96,7 +101,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
     // Save to recently played in localStorage (user-specific)
     if (auth.user?.id) {
-      
+      setRecentlyPlayedIds(prev => {
+        const filtered = prev.filter(id => id !== song.id);
+        // Keep the 50 most recent
+        return [song.id, ...filtered].slice(0, 50);
+      });
+
       // Still emit the specific event for compatibility if any other component expects it
       window.dispatchEvent(new CustomEvent('recentlyPlayedUpdated', {
         detail: { userId: auth.user.id, songId: song.id }
