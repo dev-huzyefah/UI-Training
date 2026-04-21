@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [showToast]);
 
   const signup = useCallback(async (data: SignupData) => {
     setError(null);
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [showToast]);
 
   const logout = useCallback(() => {
     authAPI.clearSession();

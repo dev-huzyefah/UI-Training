@@ -6,7 +6,7 @@ import { ROUTES } from '@/shared/constants';
 import './Auth.css';
 
 export function SignupForm() {
-  const { signup, isAuthenticated, error, clearError } = useAuth();
+  const { signup, isAuthenticated, error, clearError, isLoading } = useAuth();
   const { showToast } = useToast();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
@@ -89,8 +89,13 @@ export function SignupForm() {
             />
           </div>
 
-          <button type="submit" className="auth-form__submit" id="signup-submit">
-            Create Account
+          <button 
+            type="submit" 
+            className="auth-form__submit" 
+            id="signup-submit"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
