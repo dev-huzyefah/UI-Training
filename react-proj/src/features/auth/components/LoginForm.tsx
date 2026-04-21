@@ -1,22 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 import { ROUTES } from '@/shared/constants';
 import './Auth.css';
 
 export function LoginForm() {
   const { login, isAuthenticated, error, clearError } = useAuth();
+  const { showToast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (error) {
+      showToast(error, 'error');
+      clearError();
+    }
+  }, [error, showToast, clearError]);
 
   if (isAuthenticated) {
     return <Navigate to={ROUTES.HOME} replace />;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async  (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
-    void login({ email, password });
+    await login({ email, password });
   };
 
   return (
@@ -33,7 +42,6 @@ export function LoginForm() {
         <p className="auth-card__subtitle">Sign in</p>
 
         <form className="auth-form" onSubmit={handleSubmit} id="login-form">
-          {error && <div className="auth-form__error">{error}</div>}
 
           <div className="auth-form__field">
             <label className="auth-form__label" htmlFor="login-email">Email</label>

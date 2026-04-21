@@ -1,23 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 import { ROUTES } from '@/shared/constants';
 import './Auth.css';
 
 export function SignupForm() {
   const { signup, isAuthenticated, error, clearError } = useAuth();
+  const { showToast } = useToast();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (error) {
+      showToast(error, 'error');
+      // Clear error after showing toast to prevent re-triggering if component re-mounts
+      // or to allow showing the same error again if the user submits again
+      clearError();
+    }
+  }, [error, showToast, clearError]);
 
   if (isAuthenticated) {
     return <Navigate to={ROUTES.HOME} replace />;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
-    void signup({ displayName, email, password });
+    await signup({ displayName, email, password });
   };
 
   return (
@@ -34,7 +45,6 @@ export function SignupForm() {
         <p className="auth-card__subtitle">Create your account to get started</p>
 
         <form className="auth-form" onSubmit={handleSubmit} id="signup-form">
-          {error && <div className="auth-form__error">{error}</div>}
 
           <div className="auth-form__field">
             <label className="auth-form__label" htmlFor="signup-name">Display Name</label>

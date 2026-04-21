@@ -3,7 +3,7 @@ import type { AuthUser, AuthCredentials, SignupData } from '../types/authTypes';
 import * as authAPI from '../services/authAPI';
 import { useToast } from '@/shared/components/Toast/ToastContext';
 
-export interface AuthStore {
+export interface AuthContextType {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -14,7 +14,7 @@ export interface AuthStore {
   clearError: () => void;
 }
 
-export const AuthContext = createContext<AuthStore | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { showToast } = useToast();
@@ -39,12 +39,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         const errorMsg = result.error ?? 'Login failed';
         setError(errorMsg);
-        showToast(errorMsg, 'error');
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Login failed';
       setError(errorMsg);
-      showToast(errorMsg, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -61,12 +59,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         const errorMsg = result.error ?? 'Signup failed';
         setError(errorMsg);
-        showToast(errorMsg, 'error');
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Signup failed';
       setError(errorMsg);
-      showToast(errorMsg, 'error');
     } finally {
       setIsLoading(false);
     }

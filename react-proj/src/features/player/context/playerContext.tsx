@@ -6,14 +6,14 @@ import { songAPI } from '@/shared/services/api';
 import { PLAYER, STORAGE_KEYS } from '@/shared/constants';
 import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
 
-export interface PlayerStore {
+export interface PlayerContextType {
   currentSong: Song | null;
   queue: Song[];
   queueIndex: number;
   isPlaying: boolean;
   volume: number;
   currentTime: number;
-  duration: number;
+  duration: number; 
   isMuted: boolean;
   playSong: (song: Song, queue?: Song[], index?: number) => void;
   togglePlay: () => void;
@@ -26,7 +26,7 @@ export interface PlayerStore {
   toggleMute: () => void;
 }
 
-export const PlayerContext = createContext<PlayerStore | null>(null);
+export const PlayerContext = createContext<PlayerContextType | null>(null);
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const auth = useAuth();
