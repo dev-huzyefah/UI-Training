@@ -1,41 +1,9 @@
+import type { User, Song, Playlist, RecentlyPlayed, UserPlaylist } from '../types/types';
+
+
+
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
-interface User {
-  id: string;
-  email: string;
-  password?: string;
-  displayName: string;
-  avatarUrl: string;
-}
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  album: string;
-  duration: number;
-  coverUrl: string;
-  audioUrl: string;
-  genre: string;
-}
-
-interface Playlist {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  coverUrl: string;
-  songIds: string[];
-  createdAt: string;
-  isFeatured?: boolean;
-}
-
-interface RecentlyPlayed {
-  id: string;
-  userId: string;
-  songId: string;
-  playedAt: string;
-}
 
 // User API
 export const userAPI = {
@@ -104,19 +72,19 @@ export const playlistsAPI = {
 
 // Playlist API
 export const playlistAPI = {
-  async getPlaylists(userId: string): Promise<Playlist[]> {
+  async getPlaylists(userId: string): Promise<UserPlaylist[]> {
     const response = await fetch(`${API_URL}/playlists?userId=${userId}`);
     if (!response.ok) throw new Error('Failed to fetch playlists');
-    return response.json() as Promise<Playlist[]>;
+    return response.json() as Promise<UserPlaylist[]>;
   },
 
-  async getPlaylist(id: string): Promise<Playlist> {
+  async getPlaylist(id: string): Promise<UserPlaylist> {
     const response = await fetch(`${API_URL}/playlists/${id}`);
     if (!response.ok) throw new Error('Playlist not found');
-    return response.json() as Promise<Playlist>;
+    return response.json() as Promise<UserPlaylist>;
   },
 
-  async createPlaylist(userId: string, name: string, description: string): Promise<Playlist> {
+  async createPlaylist(userId: string, name: string, description: string): Promise<UserPlaylist> {
     const newPlaylist = {
       id: `playlist-${Date.now()}`,
       userId,
@@ -134,10 +102,10 @@ export const playlistAPI = {
     });
 
     if (!response.ok) throw new Error('Failed to create playlist');
-    return response.json() as Promise<Playlist>;
+    return response.json() as Promise<UserPlaylist>;
   },
 
-  async updatePlaylist(playlistId: string, updates: Partial<Playlist>): Promise<Playlist> {
+  async updatePlaylist(playlistId: string, updates: Partial<UserPlaylist>): Promise<UserPlaylist> {
     const response = await fetch(`${API_URL}/playlists/${playlistId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -145,7 +113,7 @@ export const playlistAPI = {
     });
 
     if (!response.ok) throw new Error('Failed to update playlist');
-    return response.json() as Promise<Playlist>;
+    return response.json() as Promise<UserPlaylist>;
   },
 
   async deletePlaylist(id: string): Promise<void> {
@@ -156,7 +124,7 @@ export const playlistAPI = {
     if (!response.ok) throw new Error('Failed to delete playlist');
   },
 
-  async addSongToPlaylist(playlistId: string, songId: string): Promise<Playlist> {
+  async addSongToPlaylist(playlistId: string, songId: string): Promise<UserPlaylist> {
     const playlist = await this.getPlaylist(playlistId);
     if (!playlist.songIds.includes(songId)) {
       playlist.songIds.push(songId);
@@ -164,7 +132,7 @@ export const playlistAPI = {
     return this.updatePlaylist(playlistId, { songIds: playlist.songIds });
   },
 
-  async removeSongFromPlaylist(playlistId: string, songId: string): Promise<Playlist> {
+  async removeSongFromPlaylist(playlistId: string, songId: string): Promise<UserPlaylist> {
     const playlist = await this.getPlaylist(playlistId);
     playlist.songIds = playlist.songIds.filter(id => id !== songId);
     return this.updatePlaylist(playlistId, { songIds: playlist.songIds });

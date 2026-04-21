@@ -1,6 +1,7 @@
 import { createContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 import type { AuthUser, AuthCredentials, SignupData } from '../types/authTypes';
 import * as authAPI from '../services/authAPI';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 
 export interface AuthStore {
   user: AuthUser | null;
@@ -16,6 +17,7 @@ export interface AuthStore {
 export const AuthContext = createContext<AuthStore | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { showToast } = useToast();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,11 +35,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await authAPI.login(creds);
       if (result.success && result.user) {
         setUser(result.user);
+        showToast('Successfully logged in', 'success');
       } else {
-        setError(result.error ?? 'Login failed');
+        const errorMsg = result.error ?? 'Login failed';
+        setError(errorMsg);
+        showToast(errorMsg, 'error');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      const errorMsg = err instanceof Error ? err.message : 'Login failed';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setIsLoading(false);
     }
@@ -50,11 +57,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const result = await authAPI.signup(data);
       if (result.success && result.user) {
         setUser(result.user);
+        showToast('Account created successfully', 'success');
       } else {
-        setError(result.error ?? 'Signup failed');
+        const errorMsg = result.error ?? 'Signup failed';
+        setError(errorMsg);
+        showToast(errorMsg, 'error');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Signup failed');
+      const errorMsg = err instanceof Error ? err.message : 'Signup failed';
+      setError(errorMsg);
+      showToast(errorMsg, 'error');
     } finally {
       setIsLoading(false);
     }

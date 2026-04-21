@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlaylist } from '../hooks/usePlaylist';
+import { ROUTES } from '@/shared/constants';
 import './Playlist.css';
 
 export function CreatePlaylistPage() {
@@ -9,16 +10,17 @@ export function CreatePlaylistPage() {
   const { createPlaylist } = usePlaylist();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
     try {
       const playlist = await createPlaylist(name.trim(), description.trim());
-      navigate(`/playlists/${playlist.id}`);
+      navigate(`${ROUTES.PLAYLISTS}/${playlist.id}`);
     } catch (error) {
       console.error('Failed to create playlist:', error);
     }
   };
+
 
   return (
     <div className="create-playlist" id="create-playlist-page">

@@ -2,8 +2,11 @@ import { useState, useMemo, useEffect } from 'react';
 import { PiMagnifyingGlassBold, PiMusicNotesBold } from 'react-icons/pi';
 import { SongRow } from '@/shared/components/SongRow';
 import { EmptyState } from '@/shared/components/EmptyState';
+import { AddToPlaylistModal } from '@/shared/components/AddToPlaylistModal';
 import { usePlaylist } from '@/features/playlists/hooks/usePlaylist';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 import { songAPI } from '@/shared/services/api';
+import { SEARCH } from '@/shared/constants';
 import type { Song } from '@/shared/types/types';
 import './SearchPage.css';
 
@@ -14,9 +17,9 @@ export function SearchPage() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-  const [_, setLoading] = useState(true);
   
   const { playlists, addSongToPlaylist } = usePlaylist();
+  const { showToast } = useToast();
 
   // Fetch songs on mount
   useEffect(() => {
@@ -26,8 +29,7 @@ export function SearchPage() {
         setAllSongs(songs);
       } catch (error) {
         console.error('Failed to fetch songs:', error);
-      } finally {
-        setLoading(false);
+        showToast('Failed to load songs. Please refresh.', 'error');
       }
     };
 
@@ -56,13 +58,6 @@ export function SearchPage() {
     });
   }, [query, filter]);
 
-  const filters: { label: string; value: FilterType }[] = [
-    { label: 'All', value: 'all' },
-    { label: 'Title', value: 'title' },
-    { label: 'Artist', value: 'artist' },
-    { label: 'Album', value: 'album' },
-  ];
-
   return (
     <div className="search-page" id="search-page">
       <div className="search-page__header">
@@ -72,7 +67,7 @@ export function SearchPage() {
           <input
             className="search-page__input"
             type="text"
-            placeholder="What do you want to listen to?"
+            placeholder={SEARCH.PLACEHOLDER}
             value={query}
             onChange={e => setQuery(e.target.value)}
             id="search-input"
@@ -83,63 +78,22 @@ export function SearchPage() {
 
       {/* Add to Playlist Modal */}
       {selectedSong && (
-        <div 
-          className="add-songs-overlay" 
-          onClick={() => setSelectedSong(null)}
-        >
-          <div 
-            className="add-to-playlist-modal"
-            onClick={e => e.stopPropagation()}
-          >
-            <h2>Add to Playlist</h2>
-            <p className="add-to-playlist-modal__description">
-              Choose a playlist for "{selectedSong.title}"
-            </p>
-            
-            <div className="add-to-playlist-modal__list">
-              {playlists.length === 0 ? (
-                <p className="add-to-playlist-modal__empty">
-                  You haven't created any playlists yet.
-                </p>
-              ) : (
-                playlists.map(playlist => (
-                  <button
-                    key={playlist.id}
-                    className="add-to-playlist-modal__item"
-                    onClick={async () => {
-                      await addSongToPlaylist(playlist.id, selectedSong.id);
-                      setSelectedSong(null);
-                    }}
-                  >
-                    <img 
-                      src={playlist.coverUrl} 
-                      alt={playlist.name} 
-                      className="add-to-playlist-modal__item-img"
-                    />
-                    <span className="add-to-playlist-modal__item-name">{playlist.name}</span>
-                  </button>
-                ))
-              )}
-            </div>
-            
-            <button 
-              className="add-to-playlist-modal__cancel"
-              onClick={() => setSelectedSong(null)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <AddToPlaylistModal
+          song={selectedSong}
+          playlists={playlists}
+          onClose={() => setSelectedSong(null)}
+          onAdd={addSongToPlaylist}
+        />
       )}
 
       {query.trim() && (
         <>
           <div className="search-page__filters">
-            {filters.map(f => (
+            {SEARCH.FILTERS.map(f => (
               <button
                 key={f.value}
                 className={`search-page__chip ${filter === f.value ? 'search-page__chip--active' : ''}`}
-                onClick={() => setFilter(f.value)}
+                onClick={() => setFilter(f.value as FilterType)}
                 id={`filter-${f.value}`}
               >
                 {f.label}
@@ -154,11 +108,11 @@ export function SearchPage() {
           {results.length > 0 ? (
             <div className="search-page__results">
               {results.map((song, i) => (
-                <SongRow 
-                  key={song.id} 
-                  song={song} 
-                  index={i} 
-                  queue={results} 
+                <SongRow
+                  key={song.id}
+                  song={song}
+                  index={i}
+                  queue={results}
                   onAddToPlaylist={() => setSelectedSong(song)}
                 />
               ))}
@@ -166,7 +120,7 @@ export function SearchPage() {
           ) : (
             <EmptyState
               icon={<PiMusicNotesBold />}
-              title="No results"
+              title={SEARCH.NO_RESULTS_TITLE}
               message={`We couldn't find anything matching "${query}". Try a different search term.`}
             />
           )}
@@ -176,10 +130,11 @@ export function SearchPage() {
       {!query.trim() && (
         <EmptyState
           icon={<PiMagnifyingGlassBold />}
-          title="Find your music"
-          message="Search by song title, artist name, or album to discover tracks."
+          title={SEARCH.EMPTY_TITLE}
+          message={SEARCH.EMPTY_MESSAGE}
         />
       )}
     </div>
   );
 }
+

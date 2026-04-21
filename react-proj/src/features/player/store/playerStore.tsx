@@ -1,8 +1,9 @@
 import { createContext, useState, useRef, useCallback, useEffect, type ReactNode } from 'react';
 import type { Song } from '@/shared/types/types';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 import { songAPI } from '@/shared/services/api';
+import { PLAYER } from '@/shared/constants';
 
 export interface PlayerStore {
   currentSong: Song | null;
@@ -28,22 +29,22 @@ export const PlayerContext = createContext<PlayerStore | null>(null);
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const auth = useAuth();
+  const { showToast } = useToast();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [queue, setQueue] = useState<Song[]>([]);
   const [queueIndex, setQueueIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolumeState] = useState(0.7);
+  const [volume, setVolumeState] = useState<number>(PLAYER.DEFAULT_VOLUME);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   
-  const [_, setRecentIds] = useLocalStorage<string[]>(auth.user?.id ? `recently_played_${auth.user.id}` : '', []);
 
   // Initialize audio element
   useEffect(() => {
     const audio = new Audio();
-    audio.volume = 0.7;
+    audio.volume = PLAYER.DEFAULT_VOLUME;
     audioRef.current = audio;
 
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
@@ -62,7 +63,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       audio.removeEventListener('ended', handleEnded);
       audio.pause();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Only initialize the Audio element and listeners once. handleEnded uses
+    // nextTrackRef to call the latest nextTrack without triggering re-runs.
   }, []);
 
   // When queue changes and an ended event bumps queueIndex, auto-play the next song
@@ -94,14 +96,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
     // Save to recently played in localStorage (user-specific)
     if (auth.user?.id) {
-      setRecentIds(recent => [song.id, ...recent.filter(id => id !== song.id)].slice(0, 20));
       
       // Still emit the specific event for compatibility if any other component expects it
       window.dispatchEvent(new CustomEvent('recentlyPlayedUpdated', {
         detail: { userId: auth.user.id, songId: song.id }
       }));
     }
-  }, [auth.user?.id, setRecentIds]);
+  }, [auth.user?.id]);
 
   const togglePlay = useCallback(() => {
     if (!audioRef.current || !currentSong) return;
@@ -143,6 +144,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.error('Autoplay failed:', error);
+        showToast('Autoplay failed', 'error');
         setIsPlaying(false);
       }
     }
@@ -154,7 +156,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, [nextTrack]);
 
   const prevTrack = useCallback(() => {
-    if (audioRef.current && audioRef.current.currentTime > 3) {
+    if (audioRef.current && audioRef.current.currentTime > PLAYER.PREV_TRACK_THRESHOLD) {
       audioRef.current.currentTime = 0;
       setCurrentTime(0);
     } else if (queueIndex > 0) {
@@ -216,3 +218,4 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     </PlayerContext.Provider>
   );
 }
+

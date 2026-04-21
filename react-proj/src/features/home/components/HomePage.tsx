@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { usePlaylist } from '@/features/playlists/hooks/usePlaylist';
 import { useLocalStorage } from '@/shared/hooks/useLocalStorage';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 import { SongRow } from '@/shared/components/SongRow';
 import { PlaylistCard } from '@/shared/components/PlaylistCard';
+import { AddToPlaylistModal } from '@/shared/components/AddToPlaylistModal';
 import { songAPI, playlistsAPI } from '@/shared/services/api';
+import { STORAGE_KEYS, DEFAULTS } from '@/shared/constants';
 import type { Song, Playlist } from '@/shared/types/types';
 import './HomePage.css';
 
@@ -17,15 +20,16 @@ function getGreeting(): string {
 }
 
 export function HomePage() {
-  const { user } = useAuth();
-  const { playlists, addSongToPlaylist } = usePlaylist();
+  const { user, isLoading: authLoading } = useAuth();
+  const { playlists, addSongToPlaylist, isLoading: isPlaylistsLoading } = usePlaylist();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [featured, setFeatured] = useState<Playlist[]>([]);
-  const [_, setLoading] = useState(true);
+  const [isDataLoading, setIsDataLoading] = useState(true);
 
-  const [recentIds] = useLocalStorage<string[]>(user?.id ? `recently_played_${user.id}` : '', []);
+  const [recentIds] = useLocalStorage<string[]>(user?.id ? `${STORAGE_KEYS.RECENTLY_PLAYED_PREFIX}${user.id}` : '', []);
 
   const recentSongs = useMemo(() => {
     if (!user?.id || allSongs.length === 0) return [];
@@ -33,12 +37,13 @@ export function HomePage() {
     return recentIds
       .map(id => allSongs.find(s => s.id === id))
       .filter((s): s is Song => !!s)
-      .slice(0, 6);
+      .slice(0, DEFAULTS.MAX_RECENT_SONGS);
   }, [recentIds, allSongs, user?.id]);
 
   // Fetch songs and featured playlists on mount
   useEffect(() => {
     const fetchData = async () => {
+      setIsDataLoading(true);
       try {
         const [songs, featuredPlaylists] = await Promise.all([
           songAPI.getAllSongs(),
@@ -48,8 +53,9 @@ export function HomePage() {
         setFeatured(featuredPlaylists);
       } catch (error) {
         console.error('Failed to fetch songs or featured playlists:', error);
+        showToast('Failed to load home page content.', 'error');
       } finally {
-        setLoading(false);
+        setIsDataLoading(false);
       }
     };
 
@@ -70,6 +76,8 @@ export function HomePage() {
     if (song) setSelectedSong(song);
   };
 
+  const isLoading = authLoading || isPlaylistsLoading || isDataLoading;
+
   return (
     <div className="home-page" id="home-page">
       <h1 className="home-page__greeting">
@@ -82,14 +90,22 @@ export function HomePage() {
           <h2 className="home-page__section-title">Featured Playlists</h2>
         </div>
         <div className="home-page__grid">
-          {featured.map(pl => (
-            <PlaylistCard key={pl.id} playlist={pl} onClick={handlePlaylistClick} />
-          ))}
+          {isLoading
+            ? Array.from({ length: DEFAULTS.SKELETON_ITEMS_FEATURED }).map((_, i) => (
+                <div key={i} className="playlist-card-skeleton">
+                  <div className="playlist-card-skeleton__cover skeleton" />
+                  <div className="skeleton-text" style={{ width: '80%', marginTop: 'var(--space-3)' }} />
+                  <div className="skeleton-text" style={{ width: '60%', height: '0.8rem' }} />
+                </div>
+              ))
+            : featured.map(pl => (
+                <PlaylistCard key={pl.id} playlist={pl} onClick={handlePlaylistClick} />
+              ))}
         </div>
       </section>
 
       {/* Recently Played */}
-      {recentSongs.length > 0 && (
+      {!isLoading && recentSongs.length > 0 && (
         <section className="home-page__section">
           <div className="home-page__section-header">
             <h2 className="home-page__section-title">Recently Played</h2>
@@ -122,68 +138,38 @@ export function HomePage() {
           <span></span>
         </div>
         <div className="home-page__recent-list">
-          {allSongs.map((song, i) => (
-            <SongRow
-              key={song.id}
-              song={song}
-              index={i}
-              queue={allSongs}
-              onAddToPlaylist={handleAddToPlaylist}
-            />
-          ))}
+          {isLoading
+            ? Array.from({ length: DEFAULTS.SKELETON_ITEMS_SONGS }).map((_, i) => (
+                <div key={i} className="song-row-skeleton">
+                  <div className="skeleton-text" style={{ width: '12px', marginBottom: 0 }} />
+                  <div className="skeleton" style={{ width: '40px', height: '40px', borderRadius: 'var(--radius-sm)' }} />
+                  <div className="skeleton-text" style={{ width: '120px', marginBottom: 0 }} />
+                  <div className="skeleton-text" style={{ width: '80px', marginBottom: 0 }} />
+                  <div className="skeleton-text" style={{ width: '40px', marginBottom: 0 }} />
+                </div>
+              ))
+            : allSongs.map((song, i) => (
+                <SongRow
+                  key={song.id}
+                  song={song}
+                  index={i}
+                  queue={allSongs}
+                  onAddToPlaylist={handleAddToPlaylist}
+                />
+              ))}
         </div>
       </section>
 
       {/* Add to Playlist Modal */}
       {selectedSong && (
-        <div 
-          className="add-songs-overlay" 
-          onClick={() => setSelectedSong(null)}
-        >
-          <div 
-            className="add-to-playlist-modal"
-            onClick={e => e.stopPropagation()}
-          >
-            <h2>Add to Playlist</h2>
-            <p className="add-to-playlist-modal__description">
-              Choose a playlist for "{selectedSong.title}"
-            </p>
-            
-            <div className="add-to-playlist-modal__list">
-              {playlists.length === 0 ? (
-                <p className="add-to-playlist-modal__empty">
-                  You haven't created any playlists yet.
-                </p>
-              ) : (
-                playlists.map(playlist => (
-                  <button
-                    key={playlist.id}
-                    className="add-to-playlist-modal__item"
-                    onClick={async () => {
-                      await addSongToPlaylist(playlist.id, selectedSong.id);
-                      setSelectedSong(null);
-                    }}
-                  >
-                    <img 
-                      src={playlist.coverUrl} 
-                      alt={playlist.name} 
-                      className="add-to-playlist-modal__item-img"
-                    />
-                    <span className="add-to-playlist-modal__item-name">{playlist.name}</span>
-                  </button>
-                ))
-              )}
-            </div>
-            
-            <button 
-              className="add-to-playlist-modal__cancel"
-              onClick={() => setSelectedSong(null)}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <AddToPlaylistModal
+          song={selectedSong}
+          playlists={playlists}
+          onClose={() => setSelectedSong(null)}
+          onAdd={addSongToPlaylist}
+        />
       )}
     </div>
   );
 }
+

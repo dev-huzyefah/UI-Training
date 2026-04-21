@@ -1,5 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+interface LocalStorageEventDetail<T> {
+  key: string;
+  value: T;
+}
+
+declare global {
+  interface WindowEventMap {
+    'local-storage': CustomEvent<LocalStorageEventDetail<any>>;
+  }
+}
+
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
   // Use a ref to store the latest initialValue to avoid it being a stale dependency
   const initialValueRef = useRef(initialValue);
@@ -55,18 +66,19 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
       }
     };
 
-    const handleCustomEvent = (e: any) => {
-      if (e.detail && e.detail.key === key) {
-        setStoredValue(e.detail.value);
+    const handleCustomEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<LocalStorageEventDetail<T>>;
+      if (customEvent.detail && customEvent.detail.key === key) {
+        setStoredValue(customEvent.detail.value);
       }
     };
 
     window.addEventListener('storage', handleStorage);
-    window.addEventListener('local-storage' as any, handleCustomEvent);
+    window.addEventListener('local-storage', handleCustomEvent);
     
     return () => {
       window.removeEventListener('storage', handleStorage);
-      window.removeEventListener('local-storage' as any, handleCustomEvent);
+      window.removeEventListener('local-storage', handleCustomEvent);
     };
   }, [key]);
 

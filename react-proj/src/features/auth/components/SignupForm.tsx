@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { ROUTES } from '@/shared/constants';
 import './Auth.css';
 
 export function SignupForm() {
@@ -10,10 +11,10 @@ export function SignupForm() {
   const [password, setPassword] = useState('');
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={ROUTES.HOME} replace />;
   }
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
     void signup({ displayName, email, password });
@@ -84,7 +85,7 @@ export function SignupForm() {
         </form>
 
         <p className="auth-card__footer">
-          Already have an account? <Link to="/login">Sign in</Link>
+          Already have an account? <Link to={ROUTES.LOGIN}>Sign in</Link>
         </p>
       </div>
     </div>

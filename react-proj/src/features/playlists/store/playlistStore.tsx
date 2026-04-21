@@ -1,24 +1,26 @@
 import { createContext, useCallback, useState, useEffect, type ReactNode } from 'react';
-import type { Playlist } from '@/shared/types/types';
+import type { UserPlaylist } from '@/shared/types/types';
 import { playlistAPI } from '@/shared/services/api';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 
 export interface PlaylistStore {
-  playlists: Playlist[];
+  playlists: UserPlaylist[];
   isLoading: boolean;
   error: string | null;
-  createPlaylist: (name: string, description?: string) => Promise<Playlist>;
+  createPlaylist: (name: string, description?: string) => Promise<UserPlaylist>;
   deletePlaylist: (id: string) => Promise<void>;
   addSongToPlaylist: (playlistId: string, songId: string) => Promise<void>;
   removeSongFromPlaylist: (playlistId: string, songId: string) => Promise<void>;
-  getPlaylist: (id: string) => Playlist | undefined;
+  getPlaylist: (id: string) => UserPlaylist | undefined;
 }
 
 export const PlaylistContext = createContext<PlaylistStore | null>(null);
 
 export function PlaylistProvider({ children }: { children: ReactNode }) {
   const auth = useAuth();
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const { showToast } = useToast();
+  const [playlists, setPlaylists] = useState<UserPlaylist[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +35,9 @@ export function PlaylistProvider({ children }: { children: ReactNode }) {
         const data = await playlistAPI.getPlaylists(auth.user!.id);
         setPlaylists(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch playlists');
+        const errorMsg = err instanceof Error ? err.message : 'Failed to fetch playlists';
+        setError(errorMsg);
+        showToast(errorMsg, 'error');
       } finally {
         setIsLoading(false);
       }
@@ -42,16 +46,18 @@ export function PlaylistProvider({ children }: { children: ReactNode }) {
     fetchPlaylists();
   }, [auth.user?.id]);
 
-  const createPlaylist = useCallback(async (name: string, description = ''): Promise<Playlist> => {
+  const createPlaylist = useCallback(async (name: string, description = ''): Promise<UserPlaylist> => {
     if (!auth.user?.id) throw new Error('User not authenticated');
     
     try {
       const newPlaylist = await playlistAPI.createPlaylist(auth.user.id, name, description);
       setPlaylists(prev => [...prev, newPlaylist]);
+      showToast(`Playlist "${name}" created!`, 'success');
       return newPlaylist;
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to create playlist';
       setError(errorMsg);
+      showToast(errorMsg, 'error');
       throw err;
     }
   }, [auth.user?.id]);
@@ -60,9 +66,11 @@ export function PlaylistProvider({ children }: { children: ReactNode }) {
     try {
       await playlistAPI.deletePlaylist(id);
       setPlaylists(prev => prev.filter(p => p.id !== id));
+      showToast('Playlist deleted', 'success');
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to delete playlist';
       setError(errorMsg);
+      showToast(errorMsg, 'error');
       throw err;
     }
   }, []);
@@ -71,9 +79,11 @@ export function PlaylistProvider({ children }: { children: ReactNode }) {
     try {
       const updated = await playlistAPI.addSongToPlaylist(playlistId, songId);
       setPlaylists(prev => prev.map(p => p.id === playlistId ? updated : p));
+      showToast('Added to playlist', 'success');
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to add song to playlist';
       setError(errorMsg);
+      showToast(errorMsg, 'error');
       throw err;
     }
   }, []);
@@ -82,9 +92,11 @@ export function PlaylistProvider({ children }: { children: ReactNode }) {
     try {
       const updated = await playlistAPI.removeSongFromPlaylist(playlistId, songId);
       setPlaylists(prev => prev.map(p => p.id === playlistId ? updated : p));
+      showToast('Removed from playlist', 'info');
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to remove song from playlist';
       setError(errorMsg);
+      showToast(errorMsg, 'error');
       throw err;
     }
   }, []);

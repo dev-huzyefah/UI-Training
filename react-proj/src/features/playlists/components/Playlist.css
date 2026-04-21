@@ -262,3 +262,86 @@
     padding: var(--space-3);
   }
 }
+/* Additional Styles moved from inline */
+.error-banner {
+  margin: 0 0 var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(212, 83, 75, 0.1);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: var(--text-sm);
+  display: flex;
+  justify-content: center;
+}
+
+.add-songs-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+
+.add-songs-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  min-width: 320px;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: scaleIn var(--transition-base) ease-out;
+}
+
+.add-songs-modal__title {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.add-songs-modal__empty {
+  color: var(--color-text-tertiary);
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.add-songs-modal__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.add-songs-modal__list-header {
+  margin-bottom: var(--space-2);
+}
+
+.add-songs-modal__close {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: var(--text-base);
+  transition: background var(--transition-fast);
+}
+
+.add-songs-modal__close:hover {
+  background: var(--color-surface-active);
+}
+
+/* Loading States */
+.playlist-page--loading {
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+.skeleton-label { width: 80px; height: 12px; }
+.skeleton-title { width: 240px; height: 32px; margin: 8px 0; }
+.skeleton-description { width: 320px; height: 16px; }
+.skeleton-meta { width: 120px; height: 14px; margin-top: 8px; }

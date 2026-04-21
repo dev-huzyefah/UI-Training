@@ -3,25 +3,38 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { PiPlayFill, PiTrashBold, PiMusicNotesBold, PiPlusBold, PiMinusBold } from 'react-icons/pi';
 import { usePlaylist } from '../hooks/usePlaylist';
 import { usePlayer } from '@/features/player/hooks/usePlayer';
+import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 import { SongRow } from '@/shared/components/SongRow';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { songAPI, playlistsAPI } from '@/shared/services/api';
+import { ROUTES } from '@/shared/constants';
 import type { Song, Playlist } from '@/shared/types/types';
 import './Playlist.css';
 
 export function PlaylistPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getPlaylist, deletePlaylist, removeSongFromPlaylist, addSongToPlaylist } = usePlaylist();
+  const { 
+    getPlaylist, 
+    deletePlaylist, 
+    removeSongFromPlaylist, 
+    addSongToPlaylist, 
+    isLoading: isUserPlaylistsLoading,
+    error: playlistError 
+  } = usePlaylist();
   const { playSong } = usePlayer();
+  const { isLoading: authLoading } = useAuth();
+  const { showToast } = useToast();
   const [showAddSongs, setShowAddSongs] = useState(false);
   const [allSongs, setAllSongs] = useState<Song[]>([]);
   const [featured, setFeatured] = useState<Playlist[]>([]);
-  const [_, setLoading] = useState(true);
+  const [isFeaturedLoading, setIsFeaturedLoading] = useState(true);
 
   // Fetch songs and featured playlists on mount
   useEffect(() => {
     const fetchData = async () => {
+      setIsFeaturedLoading(true);
       try {
         const [songs, featuredPlaylists] = await Promise.all([
           songAPI.getAllSongs(),
@@ -31,8 +44,9 @@ export function PlaylistPage() {
         setFeatured(featuredPlaylists);
       } catch (error) {
         console.error('Failed to fetch songs or featured playlists:', error);
+        showToast('Failed to load playlist data.', 'error');
       } finally {
-        setLoading(false);
+        setIsFeaturedLoading(false);
       }
     };
 
@@ -56,6 +70,22 @@ export function PlaylistPage() {
       .filter((s): s is Song => !!s);
   }, [playlist, allSongs]);
 
+  if (authLoading || isUserPlaylistsLoading || isFeaturedLoading) {
+    return (
+      <div className="playlist-page--loading">
+        <div className="playlist-page__header">
+          <div className="playlist-page__cover skeleton" />
+          <div className="playlist-page__info">
+            <div className="skeleton-text skeleton-label" />
+            <div className="skeleton-text skeleton-title" />
+            <div className="skeleton-text skeleton-description" />
+            <div className="skeleton-text skeleton-meta" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!playlist) {
     return (
       <EmptyState
@@ -72,22 +102,38 @@ export function PlaylistPage() {
     }
   };
 
-  const handleDelete = () => {
-    if (playlist.isUserPlaylist) {
-      deletePlaylist(playlist.id);
-      navigate('/');
+  const handleDelete = async () => {
+    if (!playlist.isUserPlaylist) return;
+
+    const confirmed = window.confirm('Are you sure you want to delete this playlist? This action cannot be undone.');
+    if (!confirmed) return;
+
+    try {
+      await deletePlaylist(playlist.id);
+      navigate(ROUTES.HOME);
+    } catch (error) {
+      console.error('Failed to delete playlist:', error);
     }
   };
 
-  const handleRemoveSong = (songId: string) => {
+
+  const handleRemoveSong = async (songId: string) => {
     if (playlist.isUserPlaylist) {
-      removeSongFromPlaylist(playlist.id, songId);
+      try {
+        await removeSongFromPlaylist(playlist.id, songId);
+      } catch (error) {
+        console.error('Failed to remove song:', error);
+      }
     }
   };
 
-  const handleAddSong = (songId: string) => {
+  const handleAddSong = async (songId: string) => {
     if (playlist.isUserPlaylist) {
-      addSongToPlaylist(playlist.id, songId);
+      try {
+        await addSongToPlaylist(playlist.id, songId);
+      } catch (error) {
+        console.error('Failed to add song:', error);
+      }
     }
   };
 
@@ -102,6 +148,11 @@ export function PlaylistPage() {
 
   return (
     <div className="playlist-page" id="playlist-page">
+      {playlistError && (
+        <div className="error-banner animate-fade-in">
+          {playlistError}
+        </div>
+      )}
       <div className="playlist-page__header">
         <img
           className="playlist-page__cover"
@@ -190,42 +241,21 @@ export function PlaylistPage() {
         <div
           className="add-songs-overlay"
           onClick={() => setShowAddSongs(false)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 200,
-            overflowY: 'auto',
-            padding: 'var(--space-4)',
-          }}
         >
           <div
+            className="add-songs-modal"
             onClick={e => e.stopPropagation()}
-            style={{
-              background: 'var(--color-surface)',
-              borderRadius: 'var(--radius-lg)',
-              padding: 'var(--space-6)',
-              minWidth: '320px',
-              maxWidth: '600px',
-              maxHeight: '80vh',
-              overflowY: 'auto',
-              boxShadow: 'var(--shadow-lg)',
-              animation: 'scaleIn var(--transition-base) ease-out',
-            }}
           >
-            <h2 style={{ marginBottom: 'var(--space-4)', fontSize: 'var(--text-lg)', fontWeight: 600 }}>
+            <h2 className="add-songs-modal__title">
               Add Songs to {playlist.name}
             </h2>
             {availableSongs.length === 0 ? (
-              <p style={{ color: 'var(--color-text-tertiary)', textAlign: 'center', padding: 'var(--space-4)' }}>
+              <p className="add-songs-modal__empty">
                 All songs are already in this playlist.
               </p>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
-                <div className="playlist-page__songs-header" style={{ marginBottom: 'var(--space-2)' }}>
+              <div className="add-songs-modal__list">
+                <div className="playlist-page__songs-header add-songs-modal__list-header">
                   <span>#</span>
                   <span></span>
                   <span>Title</span>
@@ -245,16 +275,8 @@ export function PlaylistPage() {
               </div>
             )}
             <button
+              className="add-songs-modal__close"
               onClick={() => setShowAddSongs(false)}
-              style={{
-                marginTop: 'var(--space-4)',
-                padding: 'var(--space-3) var(--space-6)',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--color-surface-hover)',
-                color: 'var(--color-text-primary)',
-                cursor: 'pointer',
-                fontSize: 'var(--text-base)',
-              }}
             >
               Close
             </button>

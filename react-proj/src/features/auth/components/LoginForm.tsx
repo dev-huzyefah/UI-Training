@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { ROUTES } from '@/shared/constants';
 import './Auth.css';
 
 export function LoginForm() {
@@ -9,10 +10,10 @@ export function LoginForm() {
   const [password, setPassword] = useState('');
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={ROUTES.HOME} replace />;
   }
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
     void login({ email, password });
@@ -68,7 +69,7 @@ export function LoginForm() {
         </form>
 
         <p className="auth-card__footer">
-          Don't have an account? <Link to="/signup">Create one</Link>
+          Don't have an account? <Link to={ROUTES.SIGNUP}>Create one</Link>
         </p>
       </div>
     </div>

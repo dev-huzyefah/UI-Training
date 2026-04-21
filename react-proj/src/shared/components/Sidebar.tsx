@@ -3,13 +3,16 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { PiHouseBold, PiMagnifyingGlassBold, PiMusicNotesBold, PiPlusBold, PiSignOutBold, PiListBold, PiStarBold } from 'react-icons/pi';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { usePlaylist } from '@/features/playlists/hooks/usePlaylist';
+import { useToast } from '@/shared/components/Toast/ToastContext';
 import { playlistsAPI } from '@/shared/services/api';
+import { ROUTES } from '@/shared/constants';
 import type { Playlist } from '@/shared/types/types';
 import './Sidebar.css';
 
 export function Sidebar() {
   const { user, logout } = useAuth();
   const { playlists } = usePlaylist();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [featured, setFeatured] = useState<Playlist[]>([]);
@@ -22,6 +25,7 @@ export function Sidebar() {
         setFeatured(featuredPlaylists);
       } catch (error) {
         console.error('Failed to fetch featured playlists:', error);
+        showToast('Failed to load featured playlists.', 'error');
       }
     };
 
@@ -30,7 +34,7 @@ export function Sidebar() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate(ROUTES.LOGIN);
   };
 
   const closeMobile = () => setMobileOpen(false);
@@ -61,7 +65,7 @@ export function Sidebar() {
 
         <nav className="sidebar__nav">
           <NavLink
-            to="/"
+            to={ROUTES.HOME}
             end
             className={({ isActive }) => `sidebar__nav-item ${isActive ? 'sidebar__nav-item--active' : ''}`}
             onClick={closeMobile}
@@ -71,7 +75,7 @@ export function Sidebar() {
             Home
           </NavLink>
           <NavLink
-            to="/search"
+            to={ROUTES.SEARCH}
             className={({ isActive }) => `sidebar__nav-item ${isActive ? 'sidebar__nav-item--active' : ''}`}
             onClick={closeMobile}
             id="nav-search"
@@ -89,7 +93,7 @@ export function Sidebar() {
           {featured.map(pl => (
             <NavLink
               key={pl.id}
-              to={`/playlists/${pl.id}`}
+              to={`${ROUTES.PLAYLISTS}/${pl.id}`}
               className="sidebar__featured-item"
               onClick={closeMobile}
               title={pl.name}
@@ -106,7 +110,7 @@ export function Sidebar() {
 
         <button
           className="sidebar__create-btn"
-          onClick={() => navigate('/playlists/new')}
+          onClick={() => navigate(ROUTES.NEW_PLAYLIST)}
           id="create-playlist-btn"
         >
           <PiPlusBold size={16} />
@@ -117,7 +121,7 @@ export function Sidebar() {
           {playlists.map(pl => (
             <NavLink
               key={pl.id}
-              to={`/playlists/${pl.id}`}
+              to={`${ROUTES.PLAYLISTS}/${pl.id}`}
               className="sidebar__playlist-item"
               onClick={closeMobile}
             >
@@ -149,3 +153,4 @@ export function Sidebar() {
     </>
   );
 }
+

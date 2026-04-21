@@ -1,9 +1,6 @@
-export interface AuthUser {
-  id: string;
-  displayName: string;
-  email: string;
-  avatarUrl: string;
-}
+import type { User } from '@/shared/types/types';
+
+export type AuthUser = User;
 
 export interface AuthCredentials {
   email: string;
@@ -13,3 +10,4 @@ export interface AuthCredentials {
 export interface SignupData extends AuthCredentials {
   displayName: string;
 }
+
