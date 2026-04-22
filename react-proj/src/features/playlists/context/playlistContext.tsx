@@ -4,7 +4,7 @@ import { playlistAPI } from '@/shared/services/api';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useToast } from '@/shared/components/Toast/ToastContext';
 
-export interface PlaylistStore {
+export interface PlaylistContextType {
   playlists: UserPlaylist[];
   isLoading: boolean;
   error: string | null;
@@ -15,7 +15,7 @@ export interface PlaylistStore {
   getPlaylist: (id: string) => UserPlaylist | undefined;
 }
 
-export const PlaylistContext = createContext<PlaylistStore | null>(null);
+export const PlaylistContext = createContext<PlaylistContextType | null>(null);
 
 export function PlaylistProvider({ children }: { children: ReactNode }) {
   const auth = useAuth();
@@ -102,7 +102,7 @@ export function PlaylistProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const getPlaylist = useCallback((id: string) => {
-    return playlists.find(p => p.id === id);
+    return playlists.find(p => String(p.id) === String(id));
   }, [playlists]);
 
   return (

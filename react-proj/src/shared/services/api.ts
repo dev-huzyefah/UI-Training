@@ -1,169 +1,156 @@
+import axios, { 
+  type InternalAxiosRequestConfig, 
+  type AxiosInstance, 
+  type AxiosResponse, 
+  type AxiosRequestConfig 
+} from 'axios';
 import type { User, Song, Playlist, RecentlyPlayed, UserPlaylist } from '../types/types';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
+/**
+ * Custom Axial Instance type to handle response.data interceptor
+ */
+interface ApiInstance extends AxiosInstance {
+  get<T = any, R = T, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+  post<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R>;
+  patch<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R>;
+  delete<T = any, R = T, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+}
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+/**
+ * Standardized API Client
+ */
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}) as ApiInstance;
+
+// Request interceptor to add Authorization header
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = localStorage.getItem('authorization');
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Response interceptor to simplify data access and handle errors
+api.interceptors.response.use(
+  (response: AxiosResponse) => response.data,
+  (error) => {
+    const message = error.response?.data?.message || error.message || 'API request failed';
+    return Promise.reject(new Error(message));
+  }
+);
 
 
 // User API
 export const userAPI = {
+  /**
+   * Login using payload instead of query parameters
+   */
   async login(email: string, password: string): Promise<User> {
-    const response = await fetch(`${API_URL}/users?email=${email}`);
-    const users = await response.json() as User[];
-    const user = users.find(u => u.email === email && u.password === password);
-    if (!user) {
-      throw new Error('Invalid email or password');
+    // Moved email/password to payload as requested
+    // Using /login as a more standard endpoint for payload-based auth
+    const user = await api.post<User>('/login', { email, password });
+    
+    // Safety: ensure password is not in the object if returned by server
+    if (user) {
+      const { password: _, ...userWithoutPassword } = user as any;
+      return userWithoutPassword as User;
     }
-    const { password: _, ...userWithoutPassword } = user;
-    return userWithoutPassword as User;
+    return user;
   },
 
   async signup(email: string, password: string, displayName: string): Promise<User> {
-    // Check if user already exists
-    const checkResponse = await fetch(`${API_URL}/users?email=${email}`);
-    const existingUsers = await checkResponse.json() as User[];
-    if (existingUsers.length > 0) {
-      throw new Error('User already exists');
-    }
-
     const newUser = {
-      id: `user-${Date.now()}`,
       email,
       password,
       displayName,
       avatarUrl: `https://picsum.photos/id/${Math.floor(Math.random() * 70)}/200/200`
     };
-
-    const response = await fetch(`${API_URL}/users`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newUser)
-    });
-
-    if (!response.ok) throw new Error('Failed to create user');
-    const { password: _, ...userWithoutPassword } = await response.json() as User;
-    return userWithoutPassword as User;
+    
+    // Moved to POST with payload
+    const user = await api.post<User>('/signup', newUser);
+    
+    if (user) {
+      const { password: _, ...userWithoutPassword } = user as any;
+      return userWithoutPassword as User;
+    }
+    return user;
   }
 };
 
+
 // Song API
 export const songAPI = {
-  async getAllSongs(): Promise<Song[]> {
-    const response = await fetch(`${API_URL}/songs`);
-    if (!response.ok) throw new Error('Failed to fetch songs');
-    return response.json() as Promise<Song[]>;
-  },
-
-  async getSongById(id: string): Promise<Song> {
-    const response = await fetch(`${API_URL}/songs/${id}`);
-    if (!response.ok) throw new Error('Song not found');
-    return response.json() as Promise<Song>;
-  }
+  getAllSongs: () => api.get<Song[]>('/songs'),
+  getSongById: (id: string) => api.get<Song>(`/songs/${id}`),
 };
 
 // Featured Playlists API
 export const playlistsAPI = {
-  async getFeaturedPlaylists(): Promise<Playlist[]> {
-    const response = await fetch(`${API_URL}/featuredPlaylists`);
-    if (!response.ok) throw new Error('Failed to fetch featured playlists');
-    return response.json() as Promise<Playlist[]>;
-  }
+  getFeaturedPlaylists: () => api.get<Playlist[]>('/featuredPlaylists'),
 };
 
 // Playlist API
 export const playlistAPI = {
-  async getPlaylists(userId: string): Promise<UserPlaylist[]> {
-    const response = await fetch(`${API_URL}/playlists?userId=${userId}`);
-    if (!response.ok) throw new Error('Failed to fetch playlists');
-    return response.json() as Promise<UserPlaylist[]>;
-  },
+  getPlaylists: (userId: string) => api.get<UserPlaylist[]>('/playlists', { params: { userId } }),
+  
+  getPlaylist: (id: string) => api.get<UserPlaylist>(`/playlists/${id}`),
 
-  async getPlaylist(id: string): Promise<UserPlaylist> {
-    const response = await fetch(`${API_URL}/playlists/${id}`);
-    if (!response.ok) throw new Error('Playlist not found');
-    return response.json() as Promise<UserPlaylist>;
-  },
-
-  async createPlaylist(userId: string, name: string, description: string): Promise<UserPlaylist> {
-    const newPlaylist = {
-      id: `playlist-${Date.now()}`,
+  createPlaylist: (userId: string, name: string, description: string) => 
+    api.post<UserPlaylist>('/playlists', {
       userId,
       name,
       description,
       coverUrl: `https://picsum.photos/seed/${Date.now()}/300/300`,
       songIds: [],
       createdAt: new Date().toISOString()
-    };
+    }),
 
-    const response = await fetch(`${API_URL}/playlists`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newPlaylist)
-    });
+  updatePlaylist: (playlistId: string, updates: Partial<UserPlaylist>) => 
+    api.patch<UserPlaylist>(`/playlists/${playlistId}`, updates),
 
-    if (!response.ok) throw new Error('Failed to create playlist');
-    return response.json() as Promise<UserPlaylist>;
-  },
-
-  async updatePlaylist(playlistId: string, updates: Partial<UserPlaylist>): Promise<UserPlaylist> {
-    const response = await fetch(`${API_URL}/playlists/${playlistId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
-    });
-
-    if (!response.ok) throw new Error('Failed to update playlist');
-    return response.json() as Promise<UserPlaylist>;
-  },
-
-  async deletePlaylist(id: string): Promise<void> {
-    const response = await fetch(`${API_URL}/playlists/${id}`, {
-      method: 'DELETE'
-    });
-
-    if (!response.ok) throw new Error('Failed to delete playlist');
-  },
+  deletePlaylist: (id: string) => api.delete(`/playlists/${id}`),
 
   async addSongToPlaylist(playlistId: string, songId: string): Promise<UserPlaylist> {
     const playlist = await this.getPlaylist(playlistId);
     if (!playlist.songIds.includes(songId)) {
-      playlist.songIds.push(songId);
+      return this.updatePlaylist(playlistId, { 
+        songIds: [...playlist.songIds, songId] 
+      });
     }
-    return this.updatePlaylist(playlistId, { songIds: playlist.songIds });
+    return playlist;
   },
 
   async removeSongFromPlaylist(playlistId: string, songId: string): Promise<UserPlaylist> {
     const playlist = await this.getPlaylist(playlistId);
-    playlist.songIds = playlist.songIds.filter(id => id !== songId);
-    return this.updatePlaylist(playlistId, { songIds: playlist.songIds });
+    return this.updatePlaylist(playlistId, { 
+      songIds: playlist.songIds.filter(id => id !== songId) 
+    });
   }
 };
 
 // Recently Played API
 export const recentlyPlayedAPI = {
-  async addToRecentlyPlayed(userId: string, songId: string): Promise<RecentlyPlayed> {
-    const newEntry = {
-      id: `recent-${Date.now()}`,
+  addToRecentlyPlayed: (userId: string, songId: string) => 
+    api.post<RecentlyPlayed>('/recentlyPlayed', {
       userId,
       songId,
       playedAt: new Date().toISOString()
-    };
+    }),
 
-    const response = await fetch(`${API_URL}/recentlyPlayed`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newEntry)
-    });
-
-    if (!response.ok) throw new Error('Failed to save recently played');
-    return response.json() as Promise<RecentlyPlayed>;
-  },
-
-  async getRecentlyPlayed(userId: string): Promise<RecentlyPlayed[]> {
-    const response = await fetch(
-      `${API_URL}/recentlyPlayed?userId=${userId}&_sort=playedAt&_order=desc`
-    );
-    if (!response.ok) throw new Error('Failed to fetch recently played');
-    return response.json() as Promise<RecentlyPlayed[]>;
-  }
+  getRecentlyPlayed: (userId: string) => 
+    api.get<RecentlyPlayed[]>('/recentlyPlayed', {
+      params: { 
+        userId, 
+        _sort: 'playedAt', 
+        _order: 'desc' 
+      }
+    }),
 };
+
